@@ -28,6 +28,7 @@ export default function TopNav() {
     pathname === '/single-player' ||
     pathname === '/deck-builder' ||
     pathname === '/leaderboard' ||
+    pathname === '/lobby' ||
     pathname === '/sign-in'
   )
     return null;
@@ -40,7 +41,7 @@ export default function TopNav() {
             🥷
           </span>
           <span className="hidden text-lg font-black tracking-tight sm:block">
-            SHADOW<span className="neon-text">FORGE</span>
+            LEGEND OF <span className="neon-text">KI</span>
           </span>
         </Link>
 

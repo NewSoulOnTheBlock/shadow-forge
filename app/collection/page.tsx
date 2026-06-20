@@ -41,7 +41,7 @@ export default function CollectionPage() {
       <div className="mb-8 overflow-hidden rounded-3xl border border-[var(--color-line)] bg-[linear-gradient(135deg,rgba(0,229,255,0.10),rgba(179,136,255,0.06),rgba(255,202,87,0.07))] p-6 shadow-2xl shadow-black/20">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <p className="stat-label">Shadow Forge Arsenal</p>
+            <p className="stat-label">Legend of Ki Arsenal</p>
             <h1 className="neon-text mt-1 text-4xl font-black tracking-tight sm:text-5xl">Collection</h1>
             <p className="mt-2 max-w-2xl text-sm text-[var(--color-muted)]">
               Track every clan technique, finish the vault, and mark tournament favorites.

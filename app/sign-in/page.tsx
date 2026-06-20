@@ -31,6 +31,38 @@ export default function SignInPage() {
     return () => off?.();
   }, [refresh]);
 
+  // Login theme music. Looped while the sign-in screen is mounted; stops on exit.
+  // Browsers block autoplay-with-sound until a gesture, so fall back to starting
+  // on the first interaction if the initial play() is rejected.
+  useEffect(() => {
+    const audio = new Audio('/login-music.mp3');
+    audio.loop = true;
+    audio.volume = 0.45;
+    let started = false;
+    const start = () => {
+      if (started) return;
+      started = true;
+      void audio.play().catch(() => {});
+      window.removeEventListener('pointerdown', start);
+      window.removeEventListener('keydown', start);
+    };
+    audio
+      .play()
+      .then(() => {
+        started = true;
+      })
+      .catch(() => {
+        window.addEventListener('pointerdown', start);
+        window.addEventListener('keydown', start);
+      });
+    return () => {
+      audio.pause();
+      audio.src = '';
+      window.removeEventListener('pointerdown', start);
+      window.removeEventListener('keydown', start);
+    };
+  }, []);
+
   const signIn = async ({ name, wallet }: UiWallet) => {
     setError(null);
     setBusy(name);
@@ -73,10 +105,10 @@ export default function SignInPage() {
               🥷
             </span>
             <h1 className="mt-4 text-2xl font-black tracking-tight">
-              <span className="neon-text">Shadow Forge</span>
+              <span className="neon-text">Legend of Ki</span>
             </h1>
             <p className="mt-1 text-sm text-[var(--color-muted)]">
-              Sign in with your Solana wallet to enter the forge.
+              Sign in with your Solana wallet to begin your legend.
             </p>
           </div>
 

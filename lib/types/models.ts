@@ -1,5 +1,5 @@
 // =============================================================================
-// Shadow Forge — Core data models
+// Legend of Ki — Core data models
 // -----------------------------------------------------------------------------
 // These TypeScript interfaces describe every entity in the game. They are the
 // single source of truth for the mock data layer (`/lib/mock-data`) and are

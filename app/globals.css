@@ -205,3 +205,16 @@ body {
 .animate-pop {
   animation: pop 0.12s ease-out;
 }
+
+/* Sliding sheen used by the full-screen LoadingScreen progress bar. */
+@keyframes ki-load-fill {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+.animate-ki-load {
+  animation: ki-load-fill 1.4s ease-in-out infinite;
+}

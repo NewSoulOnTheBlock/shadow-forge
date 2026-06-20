@@ -103,10 +103,10 @@ export async function consumeNonce(): Promise<{ nonce: string; issuedAt: string 
 /** The exact human-readable message a wallet signs to authenticate. */
 export function buildSignInMessage(address: string, nonce: string, issuedAt: string): string {
   return [
-    'Shadow Forge wants you to sign in with your Solana account:',
+    'Legend of Ki wants you to sign in with your Solana account:',
     address,
     '',
-    'Sign in to Shadow Forge. This request will not trigger a blockchain transaction or cost any fees.',
+    'Sign in to Legend of Ki. This request will not trigger a blockchain transaction or cost any fees.',
     '',
     `Nonce: ${nonce}`,
     `Issued At: ${issuedAt}`,

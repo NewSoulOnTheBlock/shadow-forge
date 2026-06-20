@@ -107,7 +107,7 @@ export default function OnboardingPage() {
             onClick={submit}
             className="mt-6 w-full rounded-xl bg-gradient-to-r from-[var(--color-neon)] to-[var(--color-neon-2)] px-4 py-3 font-black text-black shadow-lg transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {busy ? 'Entering the forge…' : 'Enter Shadow Forge'}
+            {busy ? 'Entering Legend of Ki…' : 'Enter Legend of Ki'}
           </button>
         </motion.div>
       </div>

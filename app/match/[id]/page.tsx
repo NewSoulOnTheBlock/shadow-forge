@@ -14,17 +14,11 @@ import { useAppStore } from "@/store/appStore";
 import { db, CAMPAIGN_ENCOUNTERS } from "@/lib/mock-data";
 import { validateDeck, DEFAULT_DECK, STARTER_DECKS } from "@/lib/game/decks";
 import type { Prism } from "@/lib/game/types";
+import LoadingScreen from "@/components/LoadingScreen";
 
 const MatchClient = dynamic(() => import("@/components/game/MatchClient"), {
   ssr: false,
-  loading: () => (
-    <div className="grid h-[100dvh] place-items-center bg-[#06070d]">
-      <div className="flex flex-col items-center gap-3">
-        <div className="text-5xl animate-pulse">🥷</div>
-        <p className="text-sm text-[var(--color-muted)]">Entering the arena...</p>
-      </div>
-    </div>
-  ),
+  loading: () => <LoadingScreen label="Entering the arena" />,
 });
 
 function expandDeck(cards: { cardId: string; count: number }[]): string[] {

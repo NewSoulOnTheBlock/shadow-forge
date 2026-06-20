@@ -1,6 +1,6 @@
 'use client';
 
-// BgioBoard — the Shadow Forge battlefield, driven by the REAL boardgame.io
+// BgioBoard — the Legend of Ki battlefield, driven by the REAL boardgame.io
 // engine (SkyforgeGame). It reads authoritative state from `G`/`ctx` and issues
 // `moves`/`events` instead of the placeholder gameStore. This is the board that
 // renders whenever a match starts.
@@ -25,6 +25,7 @@ import UnitToken from './UnitToken';
 import HealthDisplay from './HealthDisplay';
 import ResourceDisplay from './ResourceDisplay';
 import ActionLog from './ActionLog';
+import LoadingScreen from '@/components/LoadingScreen';
 
 interface ExtraProps {
   myName: string;
@@ -156,17 +157,7 @@ export default function BgioBoard(props: BoardProps<GState> & ExtraProps) {
 
   // ----- deck-select: brief loading while decks submit -----
   if (phase === 'deckSelect') {
-    return (
-      <div
-        className="grid h-[100dvh] place-items-center bg-black"
-        style={{ backgroundImage: "url('/playmat.png')", backgroundSize: '100% 100%' }}
-      >
-        <div className="flex flex-col items-center gap-3 rounded-2xl bg-black/55 px-8 py-6 backdrop-blur-sm">
-          <div className="text-5xl animate-pulse">🥷</div>
-          <p className="text-sm text-[var(--color-muted)]">Preparing the duel…</p>
-        </div>
-      </div>
-    );
+    return <LoadingScreen label="Preparing the duel" />;
   }
 
   const gameover = ctx.gameover as { winner?: string; draw?: boolean } | undefined;

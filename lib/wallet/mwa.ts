@@ -28,7 +28,7 @@ async function ensureRegistered(): Promise<void> {
 
   registerMwa({
     appIdentity: {
-      name: 'Shadow Forge',
+      name: 'Legend of Ki',
       uri: window.location.origin,
       icon: 'favicon.svg',
     },
