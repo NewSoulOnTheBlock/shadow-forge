@@ -40,6 +40,7 @@ export default function MatchClient(props: MatchClientProps) {
     const bot = RawClient({
       game: SkyforgeGame,
       multiplayer: local,
+      matchID: props.matchId,
       playerID: '1',
       numPlayers: 2,
     });
