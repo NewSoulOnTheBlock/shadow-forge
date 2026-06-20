@@ -203,6 +203,12 @@ export interface CampaignNode {
   x: number; // map position (percent)
   y: number;
   connects: string[]; // node ids this connects to (for path lines)
+  // --- campaign encounter (optional; present on story nodes) ---
+  opponentName?: string; // the named boss who pilots the deck
+  subtitle?: string; // clan / location flavour line
+  deckName?: string; // the name of the boss's deck
+  strategy?: string; // one-line summary of how this opponent plays
+  story?: string[]; // in-depth, multi-paragraph lore for this location
 }
 
 // --- Leaderboard -------------------------------------------------------------

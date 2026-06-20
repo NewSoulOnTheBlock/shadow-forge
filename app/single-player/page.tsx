@@ -172,10 +172,39 @@ export default function SinglePlayerPage() {
             className="panel animate-float-in overflow-hidden p-5"
           >
             <div className="flex items-start justify-between gap-4">
-              <PlayerAvatar avatar={selectedNode.opponentAvatar} name={selectedNode.name} size="lg" active={selectedNode.unlocked} />
+              <PlayerAvatar avatar={selectedNode.opponentAvatar} name={selectedNode.opponentName ?? selectedNode.name} size="lg" active={selectedNode.unlocked} />
               <DifficultyChip difficulty={selectedNode.difficulty} />
             </div>
-            <p className="mt-5 text-sm leading-6 text-[var(--color-muted)]">{selectedNode.description}</p>
+            {selectedNode.subtitle && (
+              <p className="mt-3 text-xs font-semibold uppercase tracking-wider text-[var(--color-neon)]">{selectedNode.subtitle}</p>
+            )}
+            <h2 className="mt-1 text-xl font-black leading-tight">{selectedNode.name}</h2>
+            <p className="mt-3 text-sm leading-6 text-[var(--color-muted)]">{selectedNode.description}</p>
+
+            {selectedNode.deckName && (
+              <div className="mt-4 flex flex-wrap items-center gap-2">
+                <span className="chip" style={{ borderColor: 'var(--color-gold)', color: 'var(--color-gold)' }}>🎴 {selectedNode.deckName}</span>
+              </div>
+            )}
+
+            {selectedNode.strategy && (
+              <div className="mt-5 rounded-xl border border-[var(--color-line)] bg-black/20 p-3">
+                <p className="stat-label mb-1.5">Opponent strategy</p>
+                <p className="text-sm leading-6 text-[var(--color-ink)]">{selectedNode.strategy}</p>
+              </div>
+            )}
+
+            {selectedNode.story && selectedNode.story.length > 0 && (
+              <div className="mt-5">
+                <p className="stat-label mb-2">The story</p>
+                <div className="max-h-60 space-y-3 overflow-y-auto pr-1 text-sm leading-6 text-[var(--color-muted)] [scrollbar-width:thin]">
+                  {selectedNode.story.map((paragraph, i) => (
+                    <p key={i} className={cx(paragraph.trim().startsWith('"') && 'italic text-[var(--color-ink)]')}>{paragraph}</p>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div className="mt-6">
               <p className="stat-label mb-3">Rewards</p>
               <div className="space-y-2">
@@ -196,7 +225,7 @@ export default function SinglePlayerPage() {
               onClick={() => startBattle(selectedNode)}
               className="btn btn-gold mt-6 w-full"
             >
-              ⚔ Battle
+              {selectedNode.unlocked ? `⚔ Challenge ${selectedNode.opponentName ?? 'opponent'}` : '🔒 Locked'}
             </button>
           </motion.aside>
         </section>
