@@ -32,6 +32,7 @@ export default function DeckBuilderPage() {
   const duplicateDeck = useAppStore((s) => s.duplicateDeck);
   const setActiveDeck = useAppStore((s) => s.setActiveDeck);
   const activeDeckId = useAppStore((s) => s.activeDeckId);
+  const userId = useAppStore((s) => s.user.id);
 
   const [editingId, setEditingId] = useState<string>(activeDeckId);
   const initial = decks.find((d) => d.id === editingId) ?? decks[0];
@@ -53,14 +54,18 @@ export default function DeckBuilderPage() {
   const inDeck = useMemo(() => new Set(deck), [deck]);
   const error = validateDeck(deck, prisms);
 
-  function loadDeck(id: string) {
-    const d = decks.find((x) => x.id === id);
-    if (!d) return;
-    setEditingId(id);
+  function applyDeck(d: Deck) {
+    setEditingId(d.id);
     setName(d.name);
     setPrisms([...d.prisms]);
     setDeck(d.cards.flatMap((c) => Array(c.count).fill(c.cardId)));
     setNotice(null);
+  }
+
+  function loadDeck(id: string) {
+    const d = decks.find((x) => x.id === id);
+    if (!d) return;
+    applyDeck(d);
   }
 
   function newDeck() {
@@ -103,7 +108,7 @@ export default function DeckBuilderPage() {
     setDeck((d) => [...d, card.id]);
   }
 
-  function save() {
+  async function save() {
     if (error) {
       setNotice(error);
       return;
@@ -113,15 +118,20 @@ export default function DeckBuilderPage() {
     const next: Deck = {
       id: editingId,
       name: name.trim() || 'Untitled',
-      ownerId: 'u_self',
+      ownerId: userId,
       prisms,
       cards: Object.entries(counts).map(([cardId, count]) => ({ cardId, count })),
       active: editingId === activeDeckId,
       updatedAt: new Date().toISOString(),
       coverArt: prisms[0] ? PRISM_META[prisms[0]].glyph : '🎴',
     };
-    upsertDeck(next);
-    setNotice('Deck saved ✓');
+    const saved = await upsertDeck(next);
+    if (saved) {
+      setEditingId(saved.id);
+      setNotice('Deck saved ✓');
+    } else {
+      setNotice('Could not save deck. Try again.');
+    }
   }
 
   return (
@@ -269,9 +279,9 @@ export default function DeckBuilderPage() {
               </button>
               <button
                 className="btn text-sm"
-                onClick={() => {
-                  const copy = duplicateDeck(editingId);
-                  if (copy) loadDeck(copy.id);
+                onClick={async () => {
+                  const copy = await duplicateDeck(editingId);
+                  if (copy) applyDeck(copy);
                 }}
               >
                 ⧉ Duplicate

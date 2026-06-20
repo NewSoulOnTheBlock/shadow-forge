@@ -3,16 +3,16 @@
 import { motion } from 'framer-motion';
 import PlayerAvatar from '@/components/PlayerAvatar';
 import { tierColor } from '@/components/RankBadge';
-import { db } from '@/lib/mock-data';
 import { cx } from '@/lib/ui';
-
-const SELF_ID = 'u_self';
+import { useAppStore } from '@/store/appStore';
 
 export default function LeaderboardPage() {
-  // PLUG-IN POINT: replace mock leaderboard with season-scoped ranked API data.
-  const leaderboard = db.getLeaderboard();
+  // DB-backed ranked ladder; self is detected via the current profile's id,
+  // not a hardcoded string (it's a real user uuid once auth lands).
+  const leaderboard = useAppStore((s) => s.leaderboard);
+  const selfId = useAppStore((s) => s.selfUserId);
   const topThree = leaderboard.slice(0, 3);
-  const self = leaderboard.find((entry) => entry.userId === SELF_ID);
+  const self = leaderboard.find((entry) => entry.userId === selfId);
 
   return (
     <main className="mx-auto min-h-screen max-w-7xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
@@ -101,7 +101,7 @@ export default function LeaderboardPage() {
         </div>
         <div className="divide-y divide-[var(--color-line)]">
           {leaderboard.map((entry) => {
-            const isSelf = entry.userId === SELF_ID;
+            const isSelf = entry.userId === selfId;
             const color = tierColor(entry.rankTier);
             return (
               <div

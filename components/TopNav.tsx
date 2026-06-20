@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAppStore } from '@/store/appStore';
@@ -17,6 +18,8 @@ const LINKS = [
 export default function TopNav() {
   const pathname = usePathname();
   const profile = useAppStore((s) => s.profile);
+  const logout = useAppStore((s) => s.logout);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   // Hide the chrome on the immersive match screen and the full-frame home hub.
   if (pathname?.startsWith('/match/') || pathname === '/play' || pathname === '/single-player' || pathname === '/sign-in') return null;
@@ -58,15 +61,54 @@ export default function TopNav() {
           <div className="hidden items-center gap-1.5 rounded-lg border border-[var(--color-line)] bg-white/5 px-2.5 py-1.5 text-sm font-bold text-[var(--color-gold)] sm:flex">
             💠 {profile.currency.toLocaleString()}
           </div>
-          <Link href="/profile" className="flex items-center gap-2 rounded-lg border border-[var(--color-line)] bg-white/5 px-2 py-1.5 transition hover:border-[var(--color-neon)]">
-            <span className="grid h-7 w-7 place-items-center rounded-md bg-[var(--color-panel-2)] text-lg">
-              {profile.avatar}
-            </span>
-            <div className="hidden text-left leading-tight sm:block">
-              <div className="text-xs font-bold">{profile.displayName}</div>
-              <div className="text-[10px] text-[var(--color-muted)]">Lv {profile.level}</div>
-            </div>
-          </Link>
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setMenuOpen((o) => !o)}
+              className="flex items-center gap-2 rounded-lg border border-[var(--color-line)] bg-white/5 px-2 py-1.5 transition hover:border-[var(--color-neon)]"
+            >
+              <span className="grid h-7 w-7 place-items-center rounded-md bg-[var(--color-panel-2)] text-lg">
+                {profile.avatar}
+              </span>
+              <div className="hidden text-left leading-tight sm:block">
+                <div className="text-xs font-bold">{profile.displayName}</div>
+                <div className="text-[10px] text-[var(--color-muted)]">Lv {profile.level}</div>
+              </div>
+              <span className="text-[10px] text-[var(--color-muted)]">▾</span>
+            </button>
+
+            {menuOpen && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setMenuOpen(false)} />
+                <div className="absolute right-0 z-50 mt-2 w-44 overflow-hidden rounded-xl border border-[var(--color-line)] bg-[rgba(12,13,24,0.97)] py-1 shadow-2xl backdrop-blur-xl">
+                  <Link
+                    href="/profile"
+                    onClick={() => setMenuOpen(false)}
+                    className="block px-4 py-2.5 text-sm font-semibold text-[var(--color-muted)] transition hover:bg-white/5 hover:text-[var(--color-ink)]"
+                  >
+                    👤 Profile
+                  </Link>
+                  <Link
+                    href="/settings"
+                    onClick={() => setMenuOpen(false)}
+                    className="block px-4 py-2.5 text-sm font-semibold text-[var(--color-muted)] transition hover:bg-white/5 hover:text-[var(--color-ink)]"
+                  >
+                    ⚙️ Settings
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMenuOpen(false);
+                      void logout();
+                    }}
+                    className="block w-full px-4 py-2.5 text-left text-sm font-semibold text-[var(--color-oni)] transition hover:bg-white/5"
+                  >
+                    🚪 Sign Out
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
           <Link href="/settings" className="grid h-9 w-9 place-items-center rounded-lg border border-[var(--color-line)] text-[var(--color-muted)] transition hover:border-[var(--color-neon)] hover:text-[var(--color-ink)]">
             ⚙️
           </Link>

@@ -6,7 +6,6 @@ import RankBadge from '@/components/RankBadge';
 import RewardPanel from '@/components/RewardPanel';
 import MatchHistoryList from '@/components/profile/MatchHistoryList';
 import ProfileStats from '@/components/profile/ProfileStats';
-import { db } from '@/lib/mock-data';
 import { CLAN_COLOR, PRISM_META, cx } from '@/lib/ui';
 import { useAppStore } from '@/store/appStore';
 
@@ -26,8 +25,10 @@ export default function ProfilePage() {
   const user = useAppStore((s) => s.user);
   const decks = useAppStore((s) => s.decks);
 
-  const collection = db.collectionStats();
-  const achievements = db.getAchievements();
+  const collection = useAppStore((s) => s.collectionStats);
+  const achievements = useAppStore((s) => s.achievements);
+  const matchHistory = useAppStore((s) => s.matchHistory);
+  const dailyRewards = useAppStore((s) => s.dailyRewards);
   const favoriteDeck = decks.find((deck) => deck.id === profile.favoriteDeckId);
   const totalMatches = profile.wins + profile.losses;
   const winRate = totalMatches ? Math.round((profile.wins / totalMatches) * 100) : 0;
@@ -184,11 +185,11 @@ export default function ProfilePage() {
             })}
           </div>
 
-          <MatchHistoryList matches={db.getMatchHistory()} />
+          <MatchHistoryList matches={matchHistory} />
         </section>
 
         <aside className="space-y-6">
-          <RewardPanel rewards={db.getDailyRewards()} />
+          <RewardPanel rewards={dailyRewards} />
 
           <div className="panel p-5">
             <p className="stat-label">Cosmetics</p>

@@ -9,13 +9,18 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@solana-mobile/wallet-standard-mobile": "^0.5.3",
+    "@wallet-standard/app": "^1.1.1",
+    "@wallet-standard/base": "^1.1.1",
     "boardgame.io": "^0.50.2",
+    "bs58": "^6.0.0",
     "framer-motion": "^12.40.0",
     "next": "16.2.9",
     "pg": "^8.22.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "server-only": "^0.0.1",
+    "tweetnacl": "^1.0.3",
     "zustand": "^5.0.14"
   },
   "devDependencies": {

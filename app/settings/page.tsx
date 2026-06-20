@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { db } from '@/lib/mock-data';
 import { cx } from '@/lib/ui';
 import { useAppStore } from '@/store/appStore';
 
@@ -71,7 +70,6 @@ export default function SettingsPage() {
   // PLUG-IN POINT: persist settings and account edits to authenticated user preferences.
   const profile = useAppStore((s) => s.profile);
   const user = useAppStore((s) => s.user);
-  const accountUser = db.getUser();
 
   const [username, setUsername] = useState(profile.displayName);
   const [animations, setAnimations] = useState(true);
@@ -109,7 +107,7 @@ export default function SettingsPage() {
           <label className="block">
             <span className="stat-label">Email</span>
             <input
-              value={accountUser.email ?? user.email ?? 'unlinked@shadowforge.local'}
+              value={user.email ?? 'unlinked@shadowforge.local'}
               readOnly
               className="mt-2 w-full rounded-xl border border-[var(--color-line)] bg-black/30 px-4 py-3 text-[var(--color-muted)] outline-none"
             />

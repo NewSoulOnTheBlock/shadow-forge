@@ -15,11 +15,15 @@ const SORT_LABELS: Record<CollectionSort, string> = {
 };
 
 export default function CollectionPage() {
-  // PLUG-IN POINT: replace mock db reads with user-scoped collection/catalog queries.
+  // Catalog is static game content (engine); the player's owned cards come from
+  // the DB-backed store hydrated at app bootstrap.
   const catalog = db.getCatalog();
-  const collection = db.getCollection();
-  const collectionMap = db.collectionById;
-  const stats = db.collectionStats();
+  const collection = useAppStore((s) => s.collection);
+  const stats = useAppStore((s) => s.collectionStats);
+  const collectionMap = useMemo(
+    () => Object.fromEntries(collection.map((c) => [c.cardId, c])),
+    [collection],
+  );
   const ownedIds = useMemo(
     () => new Set(collection.filter((item) => item.quantity > 0).map((item) => item.cardId)),
     [collection],

@@ -16,13 +16,18 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import LobbyRoom from '@/components/lobby/LobbyRoom';
 import LobbyRoomCard from '@/components/lobby/LobbyRoomCard';
-import { db } from '@/lib/mock-data';
-import type { Lobby, LobbyPlayer, LobbyVisibility, MatchMode } from '@/lib/types';
+import type {
+  Lobby,
+  LobbyPlayer,
+  LobbyVisibility,
+  MatchMode,
+  PlayerProfile,
+} from '@/lib/types';
 import { useAppStore } from '@/store/appStore';
 
 const MODE_OPTIONS: MatchMode[] = ['ranked', 'casual', 'custom'];
 
-function guestFromProfile(profile: ReturnType<typeof db.getProfile>, deckId: string): LobbyPlayer {
+function guestFromProfile(profile: PlayerProfile, deckId: string): LobbyPlayer {
   return {
     userId: profile.userId,
     displayName: profile.displayName,
@@ -73,7 +78,8 @@ export default function LobbyPage() {
   const profile = useAppStore((state) => state.profile);
   const user = useAppStore((state) => state.user);
   const activeDeckId = useAppStore((state) => state.activeDeckId);
-  const [lobbies, setLobbies] = useState<Lobby[]>(() => db.getLobbies());
+  const createLobby = useAppStore((state) => state.createLobby);
+  const [lobbies, setLobbies] = useState<Lobby[]>(() => useAppStore.getState().lobbies);
   const [currentLobby, setCurrentLobby] = useState<Lobby | null>(null);
   const [roomName, setRoomName] = useState(`${profile.displayName}'s Dojo`);
   const [visibility, setVisibility] = useState<LobbyVisibility>('public');
@@ -82,16 +88,18 @@ export default function LobbyPage() {
 
   const publicLobbies = useMemo(() => lobbies.filter((lobby) => lobby.visibility === 'public'), [lobbies]);
 
-  function createRoom() {
-    const lobby = db.createLobby({
+  async function createRoom() {
+    // Persist the room (host + code) to the DB; name/mode/visibility are applied
+    // client-side until the realtime room schema carries them.
+    const created = await createLobby(visibility);
+    if (!created) return;
+    const lobby: Lobby = {
+      ...created,
       name: roomName.trim() || `${profile.displayName}'s Dojo`,
       visibility,
-      mode,
-      hostId: user.id,
-      hostName: profile.displayName,
-      hostAvatar: profile.avatar,
-    });
-    setLobbies((items) => [lobby, ...items]);
+      rules: { ...created.rules, mode },
+    };
+    setLobbies((items) => [lobby, ...items.filter((l) => l.id !== lobby.id)]);
     setCurrentLobby(lobby);
   }
 

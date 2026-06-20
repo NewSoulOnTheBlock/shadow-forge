@@ -20,6 +20,11 @@ alter table player_cards add column if not exists acquired_at timestamptz defaul
 
 -- deck cover art glyph --------------------------------------------------------
 alter table decks add column if not exists cover_art text default '🎴';
+alter table decks add column if not exists updated_at timestamptz default now();
+
+-- one daily-reward streak row per player (needed for upsert-on-claim) ----------
+alter table player_daily_rewards drop constraint if exists player_daily_rewards_user_unique;
+alter table player_daily_rewards add constraint player_daily_rewards_user_unique unique (user_id);
 
 -- RICH MATCH HISTORY (display-oriented; complements the raw `matches` table) ---
 create table if not exists match_history (
