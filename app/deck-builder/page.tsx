@@ -135,49 +135,51 @@ export default function DeckBuilderPage() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-6">
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-black">Deck Builder</h1>
-          <p className="text-sm text-[var(--color-muted)]">
-            Choose up to {RULES.maxPrisms} clans · {RULES.minDeck}–{RULES.maxDeck} cards · singleton.
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <select
-            value={editingId}
-            onChange={(e) => loadDeck(e.target.value)}
-            className="rounded-lg border border-[var(--color-line)] bg-[var(--color-panel)] px-3 py-2 text-sm outline-none focus:border-[var(--color-neon)]"
-          >
-            {decks.map((d) => (
-              <option key={d.id} value={d.id}>
-                {d.name}
-              </option>
-            ))}
-            {!decks.some((d) => d.id === editingId) && <option value={editingId}>{name} (new)</option>}
-          </select>
-          <button className="btn text-sm" onClick={newDeck}>
-            + New
-          </button>
-        </div>
+    <div className="fixed inset-0 overflow-hidden bg-black">
+      {/* Ornate frame backdrop, stretched to fill the viewport. */}
+      <div
+        className="absolute inset-0"
+        style={{
+          backgroundImage: 'url(/deckbuilder-bg.png)',
+          backgroundSize: '100% 100%',
+          backgroundPosition: 'center',
+        }}
+      />
+
+      {/* Top-center title (over the compass strip) + back button. */}
+      <button
+        onClick={() => router.push('/play')}
+        className="absolute left-[3%] top-[3%] z-20 flex items-center gap-1.5 rounded-lg border border-[var(--color-line)] bg-black/50 px-3 py-1.5 text-xs font-bold text-[var(--color-muted)] backdrop-blur transition hover:border-[var(--color-neon)] hover:text-[var(--color-ink)]"
+      >
+        ← Hub
+      </button>
+      <div className="absolute left-1/2 top-[6.5%] z-10 -translate-x-1/2 -translate-y-1/2 text-center">
+        <h1 className="text-lg font-black tracking-[0.3em] text-[var(--color-gold)] drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
+          DECK&nbsp;FORGE
+        </h1>
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-[220px_1fr_320px]">
-        {/* Filters */}
-        <aside className="panel h-fit p-4 lg:sticky lg:top-20">
-          <CardFilters filter={filter} setFilter={setFilter} />
-        </aside>
+      {/* ---- LEFT PANEL: filters ---- */}
+      <Region l={5.2} t={13.8} w={15.6} h={73}>
+        <div className="flex h-full flex-col">
+          <PanelHeader>Filters</PanelHeader>
+          <div className="min-h-0 flex-1 overflow-y-auto pr-1">
+            <CardFilters filter={filter} setFilter={setFilter} />
+          </div>
+        </div>
+      </Region>
 
-        {/* Collection grid */}
-        <section>
+      {/* ---- CENTER PANEL: clan picker + collection grid ---- */}
+      <Region l={22.7} t={15.5} w={52.9} h={80.5}>
+        <div className="flex h-full flex-col">
           {/* Clan picker */}
-          <div className="mb-3 flex flex-wrap gap-2">
+          <div className="mb-2 flex flex-wrap gap-1.5">
             {PRISMS.map((p) => (
               <button
                 key={p}
                 onClick={() => togglePrism(p)}
                 className={cx(
-                  'chip border px-3 py-1.5',
+                  'chip border px-2.5 py-1 text-xs',
                   prisms.includes(p) ? 'border-current' : 'border-[var(--color-line)]',
                 )}
                 style={{ color: prisms.includes(p) ? CLAN_COLOR[p] : undefined }}
@@ -187,134 +189,155 @@ export default function DeckBuilderPage() {
             ))}
           </div>
 
-          <div className="grid grid-cols-[repeat(auto-fill,minmax(124px,1fr))] gap-3">
-            {filtered.map((c) => (
-              <CardTile
-                key={c.id}
-                card={c}
-                size="sm"
-                selected={inDeck.has(c.id)}
-                onClick={() => addCard(c)}
-                className={inDeck.has(c.id) ? 'opacity-50' : ''}
-              />
-            ))}
-            {filtered.length === 0 && (
-              <div className="col-span-full grid place-items-center p-10 text-sm text-[var(--color-muted)]">
-                No cards match these filters.
-              </div>
-            )}
+          <div className="min-h-0 flex-1 overflow-y-auto pr-1">
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(112px,1fr))] gap-2.5">
+              {filtered.map((c) => (
+                <CardTile
+                  key={c.id}
+                  card={c}
+                  size="sm"
+                  selected={inDeck.has(c.id)}
+                  onClick={() => addCard(c)}
+                  className={inDeck.has(c.id) ? 'opacity-50' : ''}
+                />
+              ))}
+              {filtered.length === 0 && (
+                <div className="col-span-full grid place-items-center p-10 text-sm text-[var(--color-muted)]">
+                  No cards match these filters.
+                </div>
+              )}
+            </div>
           </div>
-        </section>
+        </div>
+      </Region>
 
-        {/* Deck panel */}
-        <aside className="lg:sticky lg:top-20 lg:h-fit">
-          <div className="panel flex max-h-[calc(100vh-6rem)] flex-col p-4">
-            <input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full rounded-lg border border-[var(--color-line)] bg-[var(--color-panel)] px-3 py-2 font-bold outline-none focus:border-[var(--color-neon)]"
+      {/* ---- RIGHT PANEL: deck list, stats, actions ---- */}
+      <Region l={77.3} t={13.8} w={17.2} h={74.5}>
+        <div className="flex h-full flex-col">
+          {/* Deck selector */}
+          <div className="mb-2 flex items-center gap-1.5">
+            <select
+              value={editingId}
+              onChange={(e) => loadDeck(e.target.value)}
+              className="min-w-0 flex-1 rounded-lg border border-[var(--color-line)] bg-black/50 px-2 py-1.5 text-xs outline-none focus:border-[var(--color-neon)]"
+            >
+              {decks.map((d) => (
+                <option key={d.id} value={d.id}>
+                  {d.name}
+                </option>
+              ))}
+              {!decks.some((d) => d.id === editingId) && <option value={editingId}>{name} (new)</option>}
+            </select>
+            <button className="btn shrink-0 px-2 py-1.5 text-xs" onClick={newDeck}>
+              + New
+            </button>
+          </div>
+
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full rounded-lg border border-[var(--color-line)] bg-black/50 px-3 py-2 text-sm font-bold outline-none focus:border-[var(--color-neon)]"
+          />
+          <div className="mt-2 flex items-center justify-between">
+            <div className="flex gap-1.5">
+              {prisms.length ? (
+                prisms.map((p) => (
+                  <span key={p} style={{ color: CLAN_COLOR[p] }}>
+                    {PRISM_META[p].glyph}
+                  </span>
+                ))
+              ) : (
+                <span className="text-xs text-[var(--color-muted)]">No clan</span>
+              )}
+            </div>
+            <span
+              className={cx(
+                'text-sm font-black',
+                deck.length < RULES.minDeck || deck.length > RULES.maxDeck
+                  ? 'text-[var(--color-oni)]'
+                  : 'text-[var(--color-shadow)]',
+              )}
+            >
+              {deck.length}/{RULES.maxDeck}
+            </span>
+          </div>
+
+          <div className="my-2 min-h-0 flex-1 overflow-y-auto pr-1">
+            <DeckList
+              cardIds={deck}
+              onRemove={(id) => setDeck((d) => d.filter((x, i) => i !== d.indexOf(id)))}
+              onInspect={(id) => setPreview(getCard(id))}
             />
-            <div className="mt-2 flex items-center justify-between">
-              <div className="flex gap-1.5">
-                {prisms.length ? (
-                  prisms.map((p) => (
-                    <span key={p} style={{ color: CLAN_COLOR[p] }}>
-                      {PRISM_META[p].glyph}
-                    </span>
-                  ))
-                ) : (
-                  <span className="text-xs text-[var(--color-muted)]">No clan</span>
-                )}
-              </div>
-              <span
-                className={cx(
-                  'text-sm font-black',
-                  deck.length < RULES.minDeck || deck.length > RULES.maxDeck
-                    ? 'text-[var(--color-oni)]'
-                    : 'text-[var(--color-shadow)]',
-                )}
-              >
-                {deck.length}/{RULES.maxDeck}
-              </span>
+          </div>
+
+          {(notice || error) && (
+            <div
+              className={cx(
+                'mb-2 rounded-lg px-3 py-2 text-xs font-semibold',
+                notice === 'Deck saved ✓'
+                  ? 'bg-[var(--color-shadow)]/15 text-[var(--color-shadow)]'
+                  : 'bg-[var(--color-oni)]/15 text-[var(--color-oni)]',
+              )}
+            >
+              {notice ?? error}
             </div>
+          )}
 
-            <div className="my-3 flex-1 overflow-y-auto pr-1">
-              <DeckList
-                cardIds={deck}
-                onRemove={(id) => setDeck((d) => d.filter((x, i) => i !== d.indexOf(id)))}
-                onInspect={(id) => setPreview(getCard(id))}
-              />
-            </div>
+          <div className="mb-2 rounded-xl border border-[var(--color-line)] bg-black/30 p-2">
+            <DeckStats cardIds={deck} />
+          </div>
 
-            {(notice || error) && (
-              <div
-                className={cx(
-                  'mb-2 rounded-lg px-3 py-2 text-xs font-semibold',
-                  notice === 'Deck saved ✓'
-                    ? 'bg-[var(--color-shadow)]/15 text-[var(--color-shadow)]'
-                    : 'bg-[var(--color-oni)]/15 text-[var(--color-oni)]',
-                )}
-              >
-                {notice ?? error}
-              </div>
-            )}
-
-            <div className="mb-3 rounded-xl border border-[var(--color-line)] p-3">
-              <DeckStats cardIds={deck} />
-            </div>
-
-            <div className="grid grid-cols-2 gap-2">
-              <button className="btn btn-primary" disabled={!!error} onClick={save}>
-                💾 Save
-              </button>
-              <button
-                className="btn"
-                disabled={!!error}
-                onClick={() => {
-                  setActiveDeck(editingId);
-                  setNotice('Set as active deck ✓');
-                }}
-              >
-                ⭐ Set Active
-              </button>
-              <button
-                className="btn text-sm"
-                onClick={async () => {
-                  const copy = await duplicateDeck(editingId);
-                  if (copy) applyDeck(copy);
-                }}
-              >
-                ⧉ Duplicate
-              </button>
-              <button
-                className="btn text-sm"
-                onClick={() => {
-                  if (decks.length <= 1) {
-                    setNotice('You need at least one deck.');
-                    return;
-                  }
-                  deleteDeck(editingId);
-                  const remaining = decks.filter((d) => d.id !== editingId)[0];
-                  if (remaining) loadDeck(remaining.id);
-                }}
-              >
-                🗑 Delete
-              </button>
-            </div>
-
+          <div className="grid grid-cols-2 gap-1.5">
+            <button className="btn btn-primary text-xs" disabled={!!error} onClick={save}>
+              💾 Save
+            </button>
             <button
-              className="btn btn-gold mt-2"
+              className="btn text-xs"
               disabled={!!error}
               onClick={() => {
                 setActiveDeck(editingId);
-                router.push('/play');
+                setNotice('Set as active deck ✓');
               }}
             >
-              ⚔️ Battle with this deck
+              ⭐ Active
+            </button>
+            <button
+              className="btn text-xs"
+              onClick={async () => {
+                const copy = await duplicateDeck(editingId);
+                if (copy) applyDeck(copy);
+              }}
+            >
+              ⧉ Copy
+            </button>
+            <button
+              className="btn text-xs"
+              onClick={() => {
+                if (decks.length <= 1) {
+                  setNotice('You need at least one deck.');
+                  return;
+                }
+                deleteDeck(editingId);
+                const remaining = decks.filter((d) => d.id !== editingId)[0];
+                if (remaining) loadDeck(remaining.id);
+              }}
+            >
+              🗑 Delete
             </button>
           </div>
-        </aside>
-      </div>
+
+          <button
+            className="btn btn-gold mt-1.5 text-xs"
+            disabled={!!error}
+            onClick={() => {
+              setActiveDeck(editingId);
+              router.push('/play');
+            }}
+          >
+            ⚔️ Battle with this deck
+          </button>
+        </div>
+      </Region>
 
       <CardPreviewModal
         card={preview}
@@ -333,6 +356,39 @@ export default function DeckBuilderPage() {
           ) : null
         }
       />
+    </div>
+  );
+}
+
+// Absolutely-positioned panel keyed to the painted boxes in deckbuilder-bg.png
+// (percent coordinates of the 1536x1024 frame).
+function Region({
+  l,
+  t,
+  w,
+  h,
+  children,
+}: {
+  l: number;
+  t: number;
+  w: number;
+  h: number;
+  children: React.ReactNode;
+}) {
+  return (
+    <div
+      className="absolute z-10"
+      style={{ left: `${l}%`, top: `${t}%`, width: `${w}%`, height: `${h}%` }}
+    >
+      {children}
+    </div>
+  );
+}
+
+function PanelHeader({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="mb-2 border-b border-[var(--color-line)] pb-1.5 text-[11px] font-black uppercase tracking-[0.2em] text-[var(--color-gold)]">
+      {children}
     </div>
   );
 }
