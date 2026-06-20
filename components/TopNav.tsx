@@ -19,7 +19,7 @@ export default function TopNav() {
   const profile = useAppStore((s) => s.profile);
 
   // Hide the chrome on the immersive match screen and the full-frame home hub.
-  if (pathname?.startsWith('/match/') || pathname === '/play') return null;
+  if (pathname?.startsWith('/match/') || pathname === '/play' || pathname === '/single-player') return null;
 
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--color-line)] bg-[rgba(7,7,13,0.72)] backdrop-blur-xl">
