@@ -191,3 +191,17 @@ body {
 .animate-pulse-glow {
   animation: pulse-glow 1.8s ease-in-out infinite;
 }
+
+@keyframes pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.animate-pop {
+  animation: pop 0.12s ease-out;
+}

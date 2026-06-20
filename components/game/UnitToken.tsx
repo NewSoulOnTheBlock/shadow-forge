@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { getCard } from '@/lib/game/cards';
 import { KEYWORD_META, CLAN_COLOR, cx } from '@/lib/ui';
 import type { BoardUnit } from '@/store/gameStore';
+import { useHoverZoom } from '@/components/CardZoom';
 
 export default function UnitToken({
   unit,
@@ -19,9 +20,14 @@ export default function UnitToken({
   targetable?: boolean; // can be attacked / targeted
   onClick?: () => void;
 }) {
-  const clan = CLAN_COLOR[getCard(unit.cardId).prism];
+  const def = getCard(unit.cardId);
+  const clan = CLAN_COLOR[def.prism];
+  const { bind, portal } = useHoverZoom(def);
   return (
     <motion.button
+      ref={bind.ref}
+      onMouseEnter={bind.onMouseEnter}
+      onMouseLeave={bind.onMouseLeave}
       layout
       initial={{ scale: 0.6, opacity: 0, y: 10 }}
       animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -70,6 +76,9 @@ export default function UnitToken({
       {ready && !selected && (
         <span className="absolute -top-1.5 right-0 text-[10px]">⚡</span>
       )}
+
+      {/* large readable card on hover */}
+      {portal}
     </motion.button>
   );
 }

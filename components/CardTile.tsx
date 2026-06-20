@@ -1,7 +1,20 @@
+'use client';
+
 // CardTile — the canonical card renderer used in the collection, deck builder,
-// and match hand. Presentational only; all interaction is via props.
+// and match hand. Presentational; interaction is via props.
+//   Hover anywhere in the app to pop a large, fully-readable zoom of the card
+//   (rendered through a portal so it is never clipped by scroll containers or
+//   the match board's overflow). Pass `hoverPreview={false}` to disable — used
+//   when a CardTile is itself rendered inside a zoom/modal to avoid recursion.
 import type { Card } from '@/lib/types';
-import { CLAN_COLOR, RARITY_COLOR, PRISM_META, KEYWORD_META, cx } from '@/lib/ui';
+import {
+  CLAN_COLOR,
+  RARITY_COLOR,
+  PRISM_META,
+  KEYWORD_META,
+  cx,
+} from '@/lib/ui';
+import { useHoverZoom } from './CardZoom';
 
 export type CardSize = 'xs' | 'sm' | 'md' | 'lg';
 
@@ -21,6 +34,7 @@ interface Props {
   favorite?: boolean;
   selected?: boolean;
   disabled?: boolean;
+  hoverPreview?: boolean; // large zoom on hover (default true)
   onClick?: () => void;
   className?: string;
 }
@@ -34,6 +48,7 @@ export default function CardTile({
   favorite,
   selected,
   disabled,
+  hoverPreview = true,
   onClick,
   className,
 }: Props) {
@@ -43,10 +58,15 @@ export default function CardTile({
   const rarityColor = RARITY_COLOR[rarity];
   const showText = size === 'md' || size === 'lg';
 
+  const { bind, portal } = useHoverZoom(card, hoverPreview);
+
   return (
     <button
+      ref={bind.ref}
       type="button"
       onClick={onClick}
+      onMouseEnter={bind.onMouseEnter}
+      onMouseLeave={bind.onMouseLeave}
       disabled={disabled}
       style={{ ['--clan' as string]: clan, ['--rar' as string]: rarityColor }}
       className={cx(
@@ -133,6 +153,9 @@ export default function CardTile({
           ×{quantity}
         </span>
       )}
+
+      {/* floating hover zoom — readable, never clipped (portal to <body>) */}
+      {portal}
     </button>
   );
 }

@@ -38,7 +38,7 @@ export default function CardPreviewModal({ card, onClose, footer }: Props) {
           >
             <div className="flex gap-5">
               <div className="shrink-0">
-                <CardTile card={card} size="lg" />
+                <CardTile card={card} size="lg" hoverPreview={false} />
               </div>
               <div className="min-w-0 flex-1">
                 <h3 className="text-xl font-black">{card.name}</h3>
