@@ -279,6 +279,126 @@ export async function getMatchHistory(userId: string): Promise<MatchHistory[]> {
   }));
 }
 
+export interface MatchResultInput {
+  result: 'win' | 'loss' | 'draw';
+  mode: MatchMode;
+  opponent: string;
+  opponentAvatar: string;
+  deckName: string;
+  durationSec: number;
+}
+
+export interface MatchResultOutcome {
+  rank: Rank;
+  wins: number;
+  losses: number;
+  leaderboard: LeaderboardEntry[];
+  matchHistoryItem: MatchHistory;
+}
+
+/**
+ * Persist a finished match: bump wins/losses, apply a ladder-point delta for
+ * ranked play, recompute the rank tier from the new lp, and append a
+ * match_history row. Returns the fresh values the UI needs.
+ */
+export async function recordMatchResult(
+  userId: string,
+  input: MatchResultInput,
+): Promise<MatchResultOutcome> {
+  const result: 'win' | 'loss' | 'draw' =
+    input.result === 'win' || input.result === 'loss' ? input.result : 'draw';
+  const ranked = input.mode === 'ranked';
+  const lpDelta = !ranked ? 0 : result === 'win' ? 25 : result === 'loss' ? -20 : 0;
+  const winInc = result === 'win' ? 1 : 0;
+  const lossInc = result === 'loss' ? 1 : 0;
+
+  // Ensure a rank row exists (real users get one on signup, but be defensive).
+  await query(
+    `insert into player_ranks (user_id, rank_name, division, lp, wins, losses)
+     values ($1, 'Bronze', 4, 0, 0, 0)
+     on conflict (user_id) do nothing`,
+    [userId],
+  );
+
+  const updated = await queryOne<{
+    rank_name: string;
+    division: number | null;
+    lp: number;
+    wins: number;
+    losses: number;
+  }>(
+    `update player_ranks
+        set wins = wins + $2,
+            losses = losses + $3,
+            lp = greatest(0, lp + $4),
+            rank_name = case
+              when greatest(0, lp + $4) >= 2600 then 'Mythic'
+              when greatest(0, lp + $4) >= 1800 then 'Diamond'
+              when greatest(0, lp + $4) >= 1200 then 'Platinum'
+              when greatest(0, lp + $4) >= 800  then 'Gold'
+              when greatest(0, lp + $4) >= 400  then 'Silver'
+              else 'Bronze'
+            end
+      where user_id = $1
+      returning rank_name, division, lp, wins, losses`,
+    [userId, winInc, lossInc, lpDelta],
+  );
+  if (!updated) throw new Error('Failed to update player_ranks');
+
+  const historyRow = await queryOne<{
+    id: string;
+    mode: string;
+    result: string;
+    opponent: string;
+    opponent_avatar: string | null;
+    deck_name: string | null;
+    rank_delta: number;
+    duration_sec: number;
+    played_at: Date;
+  }>(
+    `insert into match_history
+       (user_id, mode, result, opponent, opponent_avatar, deck_name, rank_delta, duration_sec)
+     values ($1, $2, $3, $4, $5, $6, $7, $8)
+     returning id, mode, result, opponent, opponent_avatar, deck_name,
+               rank_delta, duration_sec, played_at`,
+    [
+      userId,
+      input.mode,
+      result,
+      input.opponent,
+      input.opponentAvatar,
+      input.deckName,
+      lpDelta,
+      Math.max(0, Math.round(input.durationSec)),
+    ],
+  );
+  if (!historyRow) throw new Error('Failed to insert match_history');
+
+  const rank: Rank = {
+    tier: toTier(updated.rank_name),
+    division: updated.division ?? 1,
+    points: updated.lp,
+  };
+
+  return {
+    rank,
+    wins: updated.wins,
+    losses: updated.losses,
+    leaderboard: await getLeaderboard(),
+    matchHistoryItem: {
+      id: historyRow.id,
+      mode: historyRow.mode as MatchMode,
+      result: historyRow.result as MatchHistory['result'],
+      opponent: historyRow.opponent,
+      opponentAvatar: historyRow.opponent_avatar ?? '🥷',
+      deckName: historyRow.deck_name ?? '',
+      rankDelta: historyRow.rank_delta,
+      durationSec: historyRow.duration_sec,
+      playedAt: historyRow.played_at.toISOString(),
+    },
+  };
+}
+
 export async function getAchievements(userId: string): Promise<Achievement[]> {
   const rows = await query<{
     id: string;

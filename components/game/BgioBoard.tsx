@@ -4,7 +4,7 @@
 // engine (SkyforgeGame). It reads authoritative state from `G`/`ctx` and issues
 // `moves`/`events` instead of the placeholder gameStore. This is the board that
 // renders whenever a match starts.
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import type { BoardProps } from 'boardgame.io/react';
@@ -26,6 +26,8 @@ import HealthDisplay from './HealthDisplay';
 import ResourceDisplay from './ResourceDisplay';
 import ActionLog from './ActionLog';
 import LoadingScreen from '@/components/LoadingScreen';
+import { useAppStore } from '@/store/appStore';
+import type { MatchMode } from '@/lib/types';
 
 interface ExtraProps {
   myName: string;
@@ -34,6 +36,8 @@ interface ExtraProps {
   oppAvatar: string;
   myCards: string[];
   myPrisms: Prism[];
+  mode: string;
+  myDeckName: string;
 }
 
 type Selection =
@@ -90,6 +94,34 @@ export default function BgioBoard(props: BoardProps<GState> & ExtraProps) {
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, []);
+
+  // Persist the match result exactly once when the game ends. Only the human
+  // seat ('0') renders this board, so only the human's record is written.
+  const recordMatch = useAppStore((s) => s.recordMatch);
+  const recordedRef = useRef(false);
+  useEffect(() => {
+    const over = ctx.gameover as { winner?: string; draw?: boolean } | undefined;
+    if (!over || recordedRef.current) return;
+    recordedRef.current = true;
+    const outcome: 'win' | 'loss' | 'draw' = over.draw
+      ? 'draw'
+      : over.winner === me
+        ? 'win'
+        : 'loss';
+    const allowed: MatchMode[] = ['ranked', 'casual', 'single', 'custom'];
+    const mode: MatchMode = (allowed as string[]).includes(props.mode)
+      ? (props.mode as MatchMode)
+      : 'casual';
+    void recordMatch({
+      result: outcome,
+      mode,
+      opponent: props.oppName,
+      opponentAvatar: props.oppAvatar,
+      deckName: props.myDeckName,
+      durationSec: Math.max(1, ctx.turn) * 20,
+    });
+  }, [ctx.gameover, ctx.turn, me, props.mode, props.oppName, props.oppAvatar, props.myDeckName, recordMatch]);
+
 
   const meP = G.players[me];
   const oppP = G.players[opp];

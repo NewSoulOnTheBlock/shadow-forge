@@ -14,6 +14,7 @@
 
 import { create } from 'zustand';
 import { api, UnauthenticatedError } from '@/lib/api/client';
+import type { MatchResultPayload } from '@/lib/api/client';
 import type {
   Deck,
   PlayerProfile,
@@ -79,6 +80,7 @@ interface AppState {
   toggleFavorite: (cardId: string) => void;
   createLobby: (visibility: Lobby['visibility']) => Promise<Lobby | null>;
   claimDailyReward: () => Promise<void>;
+  recordMatch: (payload: MatchResultPayload) => Promise<void>;
   startQueue: (mode: QueueMode) => void;
   tickQueue: () => void;
   cancelQueue: () => void;
@@ -260,6 +262,24 @@ export const useAppStore = create<AppState>((set, get) => ({
       set({ dailyRewards });
     } catch (err) {
       console.error('[claimDailyReward]', err);
+    }
+  },
+
+  recordMatch: async (payload) => {
+    try {
+      const res = await api.recordMatch(payload);
+      set((s) => ({
+        profile: {
+          ...s.profile,
+          rank: res.rank,
+          wins: res.wins,
+          losses: res.losses,
+        },
+        leaderboard: res.leaderboard,
+        matchHistory: [res.matchHistoryItem, ...s.matchHistory],
+      }));
+    } catch (err) {
+      console.error('[recordMatch]', err);
     }
   },
 

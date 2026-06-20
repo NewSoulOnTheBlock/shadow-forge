@@ -62,6 +62,7 @@ export default function MatchPage({
       return {
         myCards: my.cards,
         myPrisms: my.prisms,
+        myDeckName: mine?.name ?? 'Starter Deck',
         oppCards: [...encounter.cards],
         oppPrisms: [...encounter.prisms] as Prism[],
         oppName: encounter.name,
@@ -80,6 +81,7 @@ export default function MatchPage({
     return {
       myCards: my.cards,
       myPrisms: my.prisms,
+      myDeckName: mine?.name ?? 'Starter Deck',
       oppCards: [...foePreset.cards],
       oppPrisms: [...foePreset.prisms] as Prism[],
       oppName: foe.name,
@@ -98,6 +100,7 @@ export default function MatchPage({
       oppAvatar={cfg.oppAvatar}
       myCards={cfg.myCards}
       myPrisms={cfg.myPrisms}
+      myDeckName={cfg.myDeckName}
       oppCards={cfg.oppCards}
       oppPrisms={cfg.oppPrisms}
     />

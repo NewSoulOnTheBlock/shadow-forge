@@ -302,7 +302,7 @@ export default function SignInPage() {
                     </button>
                     {showForgot && (
                       <p className="mx-auto mt-2 max-w-xs text-[11px] leading-relaxed text-[var(--color-muted)]">
-                        Shadow Forge has no passwords to lose — your Solana wallet is
+                        Legend of Ki has no passwords to lose — your Solana wallet is
                         your key. Connect it above to enter.
                       </p>
                     )}

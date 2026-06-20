@@ -15,6 +15,8 @@ import type {
   Reward,
   Lobby,
   LobbyVisibility,
+  MatchMode,
+  Rank,
   Prism,
 } from '@/lib/types';
 
@@ -50,6 +52,23 @@ export class UnauthenticatedError extends Error {
     super('unauthenticated');
     this.name = 'UnauthenticatedError';
   }
+}
+
+export interface MatchResultPayload {
+  result: 'win' | 'loss' | 'draw';
+  mode: MatchMode;
+  opponent: string;
+  opponentAvatar: string;
+  deckName: string;
+  durationSec: number;
+}
+
+export interface MatchResultResponse {
+  rank: Rank;
+  wins: number;
+  losses: number;
+  leaderboard: LeaderboardEntry[];
+  matchHistoryItem: MatchHistory;
 }
 
 export const api = {
@@ -108,4 +127,7 @@ export const api = {
     postJson<{ lobby: Lobby }>('/api/lobbies', { visibility }),
 
   claimDaily: () => postJson<{ dailyRewards: Reward[] }>('/api/daily', {}),
+
+  recordMatch: (payload: MatchResultPayload) =>
+    postJson<MatchResultResponse>('/api/match/result', payload),
 };

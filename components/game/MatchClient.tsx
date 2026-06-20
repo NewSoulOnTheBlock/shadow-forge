@@ -19,6 +19,7 @@ export interface MatchClientProps {
   mode: string;
   myName: string;
   myAvatar: string;
+  myDeckName: string;
   oppName: string;
   oppAvatar: string;
   myCards: string[];
@@ -68,6 +69,8 @@ export default function MatchClient(props: MatchClientProps) {
       oppAvatar={props.oppAvatar}
       myCards={props.myCards}
       myPrisms={props.myPrisms}
+      mode={props.mode}
+      myDeckName={props.myDeckName}
     />
   );
 }
