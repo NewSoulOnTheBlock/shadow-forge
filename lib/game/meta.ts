@@ -21,4 +21,9 @@ export const KEYWORD_META: Record<Keyword, { label: string; icon: string; tip: s
   regenerate: { label: 'Regenerate', icon: '♻️', tip: 'Heals to full at the end of your turn.' },
   pierce: { label: 'Pierce', icon: '🏹', tip: 'Excess attack damage hits the enemy hero.' },
   spellshield: { label: 'Spellshield', icon: '✨', tip: 'Negates the first enemy effect that targets it.' },
+  venom: { label: 'Venom', icon: '🐍', tip: 'Any combat damage it deals to a unit destroys that unit.' },
+  flurry: { label: 'Flurry', icon: '🌀', tip: 'Can attack twice each turn.' },
+  ambush: { label: 'Ambush', icon: '🗡️', tip: 'When attacking a unit it strikes first; a lethal blow prevents retaliation.' },
+  momentum: { label: 'Momentum', icon: '📈', tip: 'After destroying a unit in combat, it permanently gains +1/+1.' },
+  vanish: { label: 'Vanish', icon: '💨', tip: 'Re-gains Stealth at the end of your turn.' },
 };

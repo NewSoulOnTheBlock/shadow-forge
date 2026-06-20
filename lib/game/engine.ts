@@ -36,8 +36,10 @@ export function grantKeyword(u: UnitInstance, k: Keyword): void {
   if (!u.keywords.includes(k)) u.keywords.push(k);
   if (k === 'haste') {
     u.summonedThisTurn = false;
-    if (u.attacksLeft < 1) u.attacksLeft = 1;
+    const want = u.keywords.includes('flurry') ? 2 : 1;
+    if (u.attacksLeft < want) u.attacksLeft = want;
   }
+  if (k === 'stealth' || k === 'vanish') u.stealthed = true;
 }
 
 // ---- drawing ----
@@ -67,6 +69,7 @@ export function drawCards(
 export function makeUnit(G: GState, cardId: string, owner: string): UnitInstance {
   const def = getCard(cardId);
   const keywords = [...(def.keywords ?? [])];
+  const attacksPerTurn = keywords.includes('flurry') ? 2 : 1;
   return {
     iid: G.nextIid++,
     cardId,
@@ -76,7 +79,7 @@ export function makeUnit(G: GState, cardId: string, owner: string): UnitInstance
     maxHealth: def.health ?? 1,
     armor: 0,
     keywords,
-    attacksLeft: keywords.includes('haste') ? 1 : 0,
+    attacksLeft: keywords.includes('haste') ? attacksPerTurn : 0,
     summonedThisTurn: !keywords.includes('haste'),
     stealthed: keywords.includes('stealth'),
   };
@@ -326,20 +329,37 @@ export function resolveAttack(
     const defender = found.unit;
     const defenderHpBefore = defender.health;
     const retaliation = defender.attack;
+    const ambush = hasKeyword(attacker, 'ambush');
 
+    // Attacker always strikes the defender.
     damageUnit(defender, dealt);
-    damageUnit(attacker, retaliation);
-
     if (attackerLifesteal) healHero(G, attacker.owner, dealt);
-    if (hasKeyword(defender, 'lifesteal')) healHero(G, defender.owner, retaliation);
-
     if (attackerWither) wither(defender);
-    if (hasKeyword(defender, 'wither')) wither(attacker);
+    // Venom: any combat damage to a unit is lethal.
+    if (dealt > 0 && hasKeyword(attacker, 'venom') && defender.health > 0) defender.health = 0;
+
+    // Defender retaliates — unless Ambush killed it first.
+    const defenderDead = defender.health <= 0;
+    if (!(ambush && defenderDead)) {
+      damageUnit(attacker, retaliation);
+      if (hasKeyword(defender, 'lifesteal')) healHero(G, defender.owner, retaliation);
+      if (hasKeyword(defender, 'wither')) wither(attacker);
+      if (retaliation > 0 && hasKeyword(defender, 'venom') && attacker.health > 0) {
+        attacker.health = 0;
+      }
+    }
 
     // Pierce: overflow lethal damage to the enemy hero.
     if (hasKeyword(attacker, 'pierce') && defender.health <= 0) {
       const overflow = dealt - Math.max(0, defenderHpBefore);
       if (overflow > 0) damageHero(G, found.owner, overflow);
+    }
+
+    // Momentum: surviving attacker that destroyed its target grows permanently.
+    if (defender.health <= 0 && attacker.health > 0 && hasKeyword(attacker, 'momentum')) {
+      attacker.attack += 1;
+      attacker.maxHealth += 1;
+      attacker.health += 1;
     }
   }
 
@@ -392,7 +412,7 @@ export function startOfTurn(G: GState, pid: string, random: RandomAPI): void {
   p.maxMana = Math.min(RULES.maxMana, p.maxMana + 1);
   p.mana = p.maxMana;
   for (const u of p.board) {
-    u.attacksLeft = 1;
+    u.attacksLeft = hasKeyword(u, 'flurry') ? 2 : 1;
     u.summonedThisTurn = false;
   }
   drawCards(G, pid, 1, random);
@@ -404,5 +424,7 @@ export function endOfTurn(G: GState, pid: string): void {
     if (hasKeyword(u, 'regenerate') && u.health < u.maxHealth) {
       u.health = u.maxHealth;
     }
+    // Vanish: slip back into the shadows at the end of your turn.
+    if (hasKeyword(u, 'vanish')) u.stealthed = true;
   }
 }

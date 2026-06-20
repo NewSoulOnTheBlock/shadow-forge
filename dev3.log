@@ -1,0 +1,13 @@
+
+> shadow-forge@0.1.0 dev
+> next dev
+
+▲ Next.js 16.2.9 (Turbopack)
+- Local:         http://localhost:3940
+- Network:       http://10.0.0.135:3940
+✓ Ready in 547ms
+
+ GET /play 200 in 1669ms (next.js: 1501ms, application-code: 168ms)
+ GET /collection 200 in 497ms (next.js: 354ms, application-code: 143ms)
+ GET /deck-builder 200 in 365ms (next.js: 288ms, application-code: 77ms)
+ GET /match/test1?mode=ranked 200 in 806ms (next.js: 760ms, application-code: 45ms)

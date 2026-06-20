@@ -19,7 +19,13 @@ export type Keyword =
   | 'wither' // units it damages permanently get -1/-1
   | 'regenerate' // heals to full at the end of its owner's turn
   | 'pierce' // excess attack damage overflows to the enemy hero
-  | 'spellshield'; // negates the first enemy effect that targets it
+  | 'spellshield' // negates the first enemy effect that targets it
+  // --- Genesis Set keywords ---
+  | 'venom' // any combat damage this deals to a unit destroys it (deathtouch)
+  | 'flurry' // can attack twice each turn
+  | 'ambush' // when attacking a unit, strikes first; lethal prevents retaliation
+  | 'momentum' // after destroying a unit in combat, permanently gains +1/+1
+  | 'vanish'; // re-gains Stealth at the end of your turn
 
 export const ALL_KEYWORDS: Keyword[] = [
   'guard',
@@ -31,6 +37,11 @@ export const ALL_KEYWORDS: Keyword[] = [
   'regenerate',
   'pierce',
   'spellshield',
+  'venom',
+  'flurry',
+  'ambush',
+  'momentum',
+  'vanish',
 ];
 
 // What a single Effect points at.
@@ -151,7 +162,7 @@ export const RULES = {
   heroHp: 30,
   startMana: 1,
   maxMana: 12,
-  boardWidth: 6,
+  boardWidth: 5,
   handMax: 10,
   openingHand: 3,
   secondPlayerBonusCards: 1,
