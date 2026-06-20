@@ -27,6 +27,7 @@ export default function TopNav() {
     pathname === '/play' ||
     pathname === '/single-player' ||
     pathname === '/deck-builder' ||
+    pathname === '/leaderboard' ||
     pathname === '/sign-in'
   )
     return null;
