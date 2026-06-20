@@ -40,6 +40,12 @@ type Selection =
   | { kind: 'play'; handIndex: number }
   | { kind: 'attack'; iid: number };
 
+// Horizontal centre (% of viewport width) of each of the 5 board slots, measured
+// to line up with the stone panels painted into /playmat.png. Top = opponent row,
+// bottom = player row (wider, due to the arena's perspective).
+const OPP_SLOTS = [34.5, 42, 50, 58, 65.5];
+const MY_SLOTS = [33, 41.5, 50, 58.5, 67];
+
 // Adapt an engine UnitInstance to the presentational UnitToken's shape.
 function toToken(u: UnitInstance, owner: 'player' | 'opponent'): BoardUnit {
   const def = getCard(u.cardId);
@@ -151,8 +157,11 @@ export default function BgioBoard(props: BoardProps<GState> & ExtraProps) {
   // ----- deck-select: brief loading while decks submit -----
   if (phase === 'deckSelect') {
     return (
-      <div className="grid h-[100dvh] place-items-center bg-[radial-gradient(circle_at_50%_-10%,#16182b,#06070d_60%)]">
-        <div className="flex flex-col items-center gap-3">
+      <div
+        className="grid h-[100dvh] place-items-center bg-black"
+        style={{ backgroundImage: "url('/playmat.png')", backgroundSize: '100% 100%' }}
+      >
+        <div className="flex flex-col items-center gap-3 rounded-2xl bg-black/55 px-8 py-6 backdrop-blur-sm">
           <div className="text-5xl animate-pulse">🥷</div>
           <p className="text-sm text-[var(--color-muted)]">Preparing the duel…</p>
         </div>
@@ -173,9 +182,43 @@ export default function BgioBoard(props: BoardProps<GState> & ExtraProps) {
   const myHeroTargetable = isTargetable({ kind: 'hero', player: me });
 
   return (
-    <div className="relative flex h-[100dvh] flex-col gap-2 bg-[radial-gradient(circle_at_50%_-10%,#16182b,#06070d_60%)] p-3">
-      {/* top bar — opponent */}
-      <div className="flex items-center justify-between">
+    <div
+      className="relative h-[100dvh] w-full overflow-hidden bg-black"
+      style={{
+        backgroundImage: "url('/playmat.png')",
+        backgroundSize: '100% 100%',
+        backgroundPosition: 'center',
+      }}
+    >
+      {/* faint vignette so tokens + HUD stay readable over the busy arena art */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/40" />
+
+      {/* turn indicator — top center */}
+      <div className="absolute left-1/2 top-2 z-30 flex -translate-x-1/2 flex-col items-center gap-1">
+        <span className="chip">Turn {ctx.turn}</span>
+        <span
+          className={cx(
+            'rounded-full bg-black/55 px-3 py-0.5 text-xs font-bold backdrop-blur-sm',
+            myTurn ? 'text-[var(--color-neon)]' : 'text-[var(--color-muted)]',
+          )}
+        >
+          {ctx.gameover ? 'Match over' : myTurn ? 'Your turn' : "Opponent's turn"}
+        </span>
+      </div>
+
+      {/* forfeit — top right */}
+      <button
+        onClick={() => router.push('/play')}
+        className="btn absolute right-3 top-3 z-30 bg-black/55 text-xs text-[var(--color-oni)] backdrop-blur-sm"
+      >
+        Forfeit
+      </button>
+
+      {/* opponent hero — top-left altar pad */}
+      <div
+        className="absolute z-30 rounded-2xl bg-black/45 p-2 backdrop-blur-sm"
+        style={{ left: '20.5%', top: '27.5%', transform: 'translate(-50%,-50%)' }}
+      >
         <HeroPanel
           name={props.oppName}
           avatar={props.oppAvatar}
@@ -189,64 +232,13 @@ export default function BgioBoard(props: BoardProps<GState> & ExtraProps) {
           targetable={heroTargetable}
           onClick={() => clickTarget({ kind: 'hero', player: opp })}
         />
-        <div className="flex flex-col items-center gap-1">
-          <span className="chip">Turn {ctx.turn}</span>
-          <span className={cx('text-xs font-bold', myTurn ? 'text-[var(--color-neon)]' : 'text-[var(--color-muted)]')}>
-            {ctx.gameover ? 'Match over' : myTurn ? 'Your turn' : "Opponent's turn"}
-          </span>
-        </div>
-        <button onClick={() => router.push('/play')} className="btn text-xs text-[var(--color-oni)]">
-          Forfeit
-        </button>
       </div>
 
-      {/* opponent board */}
-      <Zone label="Enemy Board">
-        <AnimatePresence>
-          {oppP.board.map((u) => (
-            <UnitToken
-              key={u.iid}
-              unit={toToken(u, 'opponent')}
-              targetable={isTargetable({ kind: 'unit', iid: u.iid })}
-              onClick={() => clickTarget({ kind: 'unit', iid: u.iid })}
-            />
-          ))}
-        </AnimatePresence>
-        {oppP.board.length === 0 && <EmptyHint />}
-      </Zone>
-
-      <div className="flex flex-1 gap-2">
-        <div className="flex flex-1 flex-col justify-center">
-          <Zone label="Your Board" highlight={sel.kind === 'attack'}>
-            <AnimatePresence>
-              {meP.board.map((u) => (
-                <UnitToken
-                  key={u.iid}
-                  unit={toToken(u, 'player')}
-                  ready={unitCanAct(u)}
-                  selected={sel.kind === 'attack' && sel.iid === u.iid}
-                  targetable={isTargetable({ kind: 'unit', iid: u.iid })}
-                  onClick={() => clickMyUnit(u)}
-                />
-              ))}
-            </AnimatePresence>
-            {meP.board.length === 0 && <EmptyHint />}
-          </Zone>
-        </div>
-        <div className="hidden w-60 lg:block">
-          <ActionLog log={G.log} />
-        </div>
-      </div>
-
-      {/* targeting hint */}
-      {sel.kind !== 'none' && (
-        <div className="pointer-events-none absolute left-1/2 top-28 -translate-x-1/2 rounded-full border border-[var(--color-oni)] bg-black/70 px-4 py-1 text-xs font-bold text-[var(--color-oni)] animate-pulse-glow">
-          {sel.kind === 'play' ? 'Select a target (Esc to cancel)' : 'Select what to attack (Esc to cancel)'}
-        </div>
-      )}
-
-      {/* player hero + hand */}
-      <div className="flex items-end justify-between gap-3">
+      {/* player hero — bottom-left altar pad */}
+      <div
+        className="absolute z-30 rounded-2xl bg-black/45 p-2 backdrop-blur-sm"
+        style={{ left: '15%', top: '66%', transform: 'translate(-50%,-50%)' }}
+      >
         <HeroPanel
           name={props.myName}
           avatar={props.myAvatar}
@@ -260,49 +252,104 @@ export default function BgioBoard(props: BoardProps<GState> & ExtraProps) {
           targetable={myHeroTargetable}
           onClick={() => clickTarget({ kind: 'hero', player: me })}
         />
+      </div>
 
-        <div className="flex flex-1 items-end justify-center gap-2 overflow-x-auto pb-1">
-          {meP.hand.map((id, i) => {
-            if (id === 'HIDDEN') return null;
-            const def = getCard(id);
-            const affordable = myTurn && def.cost <= meP.mana;
-            return (
-              <motion.div
-                key={`${id}-${i}`}
-                layout
-                initial={{ y: 40, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                whileHover={{ y: -14 }}
-                onContextMenu={(e) => {
-                  e.preventDefault();
-                  setPreview(def);
-                }}
-              >
-                <CardTile
-                  card={def}
-                  size="sm"
-                  selected={sel.kind === 'play' && sel.handIndex === i}
-                  disabled={!affordable}
-                  onClick={() => playHandCard(i)}
+      {/* opponent board — 5 slots aligned to the top stone panels */}
+      <AnimatePresence>
+        {OPP_SLOTS.map((sx, i) => {
+          const u = oppP.board[i];
+          return (
+            <Slot key={`o${i}`} x={sx} y={20.5}>
+              {u && (
+                <UnitToken
+                  key={u.iid}
+                  unit={toToken(u, 'opponent')}
+                  targetable={isTargetable({ kind: 'unit', iid: u.iid })}
+                  onClick={() => clickTarget({ kind: 'unit', iid: u.iid })}
                 />
-              </motion.div>
-            );
-          })}
-          {meP.hand.length === 0 && (
-            <span className="pb-6 text-xs text-[var(--color-muted)]">Empty hand</span>
-          )}
-        </div>
+              )}
+            </Slot>
+          );
+        })}
+      </AnimatePresence>
 
-        <button
-          onClick={() => {
-            setSel({ kind: 'none' });
-            events.endTurn?.();
-          }}
-          disabled={!myTurn}
-          className="btn-primary h-14 px-6 text-sm font-black disabled:opacity-40"
-        >
-          End Turn
-        </button>
+      {/* player board — 5 slots aligned to the bottom stone panels */}
+      <AnimatePresence>
+        {MY_SLOTS.map((sx, i) => {
+          const u = meP.board[i];
+          return (
+            <Slot key={`m${i}`} x={sx} y={79} highlight={sel.kind === 'attack'}>
+              {u && (
+                <UnitToken
+                  key={u.iid}
+                  unit={toToken(u, 'player')}
+                  ready={unitCanAct(u)}
+                  selected={sel.kind === 'attack' && sel.iid === u.iid}
+                  targetable={isTargetable({ kind: 'unit', iid: u.iid })}
+                  onClick={() => clickMyUnit(u)}
+                />
+              )}
+            </Slot>
+          );
+        })}
+      </AnimatePresence>
+
+      {/* battle log — floating, large screens only */}
+      <div className="absolute right-3 top-1/2 z-20 hidden w-56 -translate-y-1/2 xl:block">
+        <ActionLog log={G.log} />
+      </div>
+
+      {/* targeting hint */}
+      {sel.kind !== 'none' && (
+        <div className="pointer-events-none absolute left-1/2 top-16 z-40 -translate-x-1/2 rounded-full border border-[var(--color-oni)] bg-black/70 px-4 py-1 text-xs font-bold text-[var(--color-oni)] animate-pulse-glow">
+          {sel.kind === 'play' ? 'Select a target (Esc to cancel)' : 'Select what to attack (Esc to cancel)'}
+        </div>
+      )}
+
+      {/* End Turn — bottom-right altar pad */}
+      <button
+        onClick={() => {
+          setSel({ kind: 'none' });
+          events.endTurn?.();
+        }}
+        disabled={!myTurn}
+        className="btn-primary absolute z-40 h-14 px-6 text-sm font-black disabled:opacity-40"
+        style={{ left: '85.5%', top: '66%', transform: 'translate(-50%,-50%)' }}
+      >
+        End Turn
+      </button>
+
+      {/* hand — fanned along the bottom wooden step */}
+      <div className="absolute bottom-1 left-1/2 z-40 flex -translate-x-1/2 items-end justify-center gap-2 px-2">
+        {meP.hand.map((id, i) => {
+          if (id === 'HIDDEN') return null;
+          const def = getCard(id);
+          const affordable = myTurn && def.cost <= meP.mana;
+          return (
+            <motion.div
+              key={`${id}-${i}`}
+              layout
+              initial={{ y: 40, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              whileHover={{ y: -18 }}
+              onContextMenu={(e) => {
+                e.preventDefault();
+                setPreview(def);
+              }}
+            >
+              <CardTile
+                card={def}
+                size="sm"
+                selected={sel.kind === 'play' && sel.handIndex === i}
+                disabled={!affordable}
+                onClick={() => playHandCard(i)}
+              />
+            </motion.div>
+          );
+        })}
+        {meP.hand.length === 0 && (
+          <span className="pb-6 text-xs text-[var(--color-muted)]">Empty hand</span>
+        )}
       </div>
 
       <CardPreviewModal card={preview} onClose={() => setPreview(null)} />
@@ -394,30 +441,26 @@ function HeroPanel({
   );
 }
 
-function Zone({
-  label,
+function Slot({
+  x,
+  y,
   highlight,
   children,
 }: {
-  label: string;
+  x: number; // centre, % of viewport width
+  y: number; // centre, % of viewport height
   highlight?: boolean;
   children: React.ReactNode;
 }) {
   return (
     <div
       className={cx(
-        'relative flex min-h-[7rem] items-center justify-center gap-2 rounded-2xl border px-3 py-2 transition',
-        highlight ? 'border-[var(--color-neon)]/60 bg-[var(--color-neon)]/5' : 'border-[var(--color-line)] bg-black/20',
+        'absolute z-20 grid h-[104px] w-[80px] place-items-center rounded-xl border transition',
+        highlight ? 'border-[var(--color-neon)]/50' : 'border-white/5',
       )}
+      style={{ left: `${x}%`, top: `${y}%`, transform: 'translate(-50%,-50%)' }}
     >
-      <span className="absolute left-3 top-1 text-[10px] uppercase tracking-widest text-[var(--color-muted)]">
-        {label}
-      </span>
       {children}
     </div>
   );
-}
-
-function EmptyHint() {
-  return <span className="text-xs text-[var(--color-muted)]">— empty —</span>;
 }
