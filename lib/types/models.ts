@@ -77,6 +77,7 @@ export interface PlayerProfile {
   badges: string[]; // cosmetic badge ids
   title?: string; // equipped cosmetic title
   currency: number; // soft currency (shards)
+  selectedHero?: string; // id of the permanent starting hero (Path Selection Ceremony)
 }
 
 // --- Decks -------------------------------------------------------------------

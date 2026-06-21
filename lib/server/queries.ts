@@ -104,6 +104,7 @@ export async function getProfile(userId: string): Promise<PlayerProfile> {
     title: string | null;
     badges: string[] | null;
     favorite_deck_id: string | null;
+    selected_hero: string | null;
     display_name: string | null;
     rank_name: string | null;
     division: number | null;
@@ -112,7 +113,7 @@ export async function getProfile(userId: string): Promise<PlayerProfile> {
     losses: number | null;
   }>(
     `select p.id, p.username, p.avatar_url, p.level, p.xp, p.xp_to_next,
-            p.currency_soft, p.title, p.badges, p.favorite_deck_id,
+            p.currency_soft, p.title, p.badges, p.favorite_deck_id, p.selected_hero,
             u.display_name,
             r.rank_name, r.division, r.lp, r.wins, r.losses
        from profiles p
@@ -141,6 +142,7 @@ export async function getProfile(userId: string): Promise<PlayerProfile> {
     badges: row.badges ?? [],
     title: row.title ?? undefined,
     currency: row.currency_soft,
+    selectedHero: row.selected_hero ?? undefined,
   };
 }
 

@@ -97,10 +97,11 @@ export const api = {
 
   logout: () => postJson<{ ok: true }>('/api/auth/logout', {}),
 
-  saveProfile: (displayName: string, avatar: string) =>
+  saveProfile: (displayName: string, avatar: string, hero?: string) =>
     postJson<{ ok: true; profile: PlayerProfile; user: User }>('/api/profile', {
       displayName,
       avatar,
+      hero,
     }),
 
   saveDeck: (deck: {

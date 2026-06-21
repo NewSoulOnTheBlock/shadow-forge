@@ -10,10 +10,12 @@ export default function Icon({
   icon,
   className,
   size = 18,
+  style,
 }: {
   icon: string;
   className?: string;
   size?: number | string;
+  style?: React.CSSProperties;
 }) {
   return (
     <Iconify
@@ -22,7 +24,7 @@ export default function Icon({
       height={size}
       className={className}
       aria-hidden
-      style={{ display: 'inline-block', verticalAlign: 'middle' }}
+      style={{ display: 'inline-block', verticalAlign: 'middle', ...style }}
     />
   );
 }

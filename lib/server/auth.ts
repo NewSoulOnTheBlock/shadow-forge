@@ -10,6 +10,7 @@ import 'server-only';
 import nacl from 'tweetnacl';
 import bs58 from 'bs58';
 import { query, queryOne, pool } from './pool';
+import { HERO_BY_ID } from '@/lib/game/heroes';
 
 /** Verify that `signatureB64` is a valid ed25519 signature of `message` by `address`. */
 export function verifyWalletSignature(address: string, message: string, signatureB64: string): boolean {
@@ -95,5 +96,41 @@ export async function saveProfileBasics(
   await query(
     'update profiles set username = $2, avatar_url = $3, onboarded = true where id = $1',
     [userId, username, glyph],
+  );
+}
+
+/**
+ * Commit the player's permanent starting hero (Path Selection Ceremony):
+ *   - records `profiles.selected_hero` + sets the hero portrait as the avatar
+ *   - unlocks the hero in `user_heroes`
+ *   - activates the hero's themed starter deck (already seeded by sf_seed_player)
+ * Throws on an unknown hero id.
+ */
+export async function selectHero(userId: string, heroId: string): Promise<void> {
+  const hero = HERO_BY_ID[heroId];
+  if (!hero) throw new Error(`unknown_hero:${heroId}`);
+
+  await query(
+    'update profiles set selected_hero = $2, avatar_url = $3, onboarded = true where id = $1',
+    [userId, hero.id, hero.avatar],
+  );
+
+  await query(
+    `insert into user_heroes (user_id, hero_id, unlocked, mastery_level)
+       values ($1, $2, true, 0)
+     on conflict (user_id, hero_id) do update set unlocked = true`,
+    [userId, hero.id],
+  );
+
+  // Make the hero's themed deck the active one (decks are seeded per new player).
+  await query(
+    'update decks set is_active = (name = $2) where user_id = $1',
+    [userId, hero.starterDeckName],
+  );
+  await query(
+    `update profiles set favorite_deck_id = (
+        select id from decks where user_id = $1 and name = $2 limit 1
+     ) where id = $1`,
+    [userId, hero.starterDeckName],
   );
 }
