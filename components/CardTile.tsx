@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from '@/components/Icon';
 // CardTile — the canonical card renderer used in the collection, deck builder,
 // and match hand. Presentational; interaction is via props.
 //   Hover anywhere in the app to pop a large, fully-readable zoom of the card
@@ -115,7 +116,7 @@ export default function CardTile({
           {foil && (
             <div className="pointer-events-none absolute inset-0 rounded-lg bg-gradient-to-tr from-transparent via-white/10 to-transparent opacity-0 transition group-hover:opacity-100" />
           )}
-          {favorite && <span className="absolute right-0 top-0 text-xs">⭐</span>}
+          {favorite && <Icon icon="ph:star-fill" size={13} className="absolute right-0 top-0" />}
         </div>
 
         {/* name */}
@@ -129,15 +130,15 @@ export default function CardTile({
         {/* stats / type */}
         <div className="mt-1 flex items-center justify-between text-[11px] font-black">
           <span className="text-[var(--color-muted)]" title={PRISM_META[card.prism].label}>
-            {PRISM_META[card.prism].glyph}
+            <Icon icon={PRISM_META[card.prism].iconify} size={14} />
           </span>
           {card.type === 'unit' ? (
             <span className="flex items-center gap-1">
-              <span className="text-[var(--color-oni)]">{card.attack ?? 0}⚔</span>
-              <span className="text-[var(--color-shadow)]">{card.health ?? 0}❤</span>
+              <span className="inline-flex items-center gap-0.5 text-[var(--color-oni)]">{card.attack ?? 0}<Icon icon="game-icons:broadsword" size={14} /></span>
+              <span className="inline-flex items-center gap-0.5 text-[var(--color-shadow)]">{card.health ?? 0}<Icon icon="ph:heart-fill" size={13} /></span>
             </span>
           ) : (
-            <span className="text-[var(--color-sage)]">✦ Spell</span>
+            <span className="inline-flex items-center gap-0.5 text-[var(--color-sage)]"><Icon icon="ph:sparkle-fill" size={14} /> Spell</span>
           )}
         </div>
 

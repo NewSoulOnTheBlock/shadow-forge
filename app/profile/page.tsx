@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from '@/components/Icon';
 import { motion } from 'framer-motion';
 import PlayerAvatar from '@/components/PlayerAvatar';
 import RankBadge from '@/components/RankBadge';
@@ -91,12 +92,12 @@ export default function ProfilePage() {
 
       <ProfileStats
         items={[
-          { label: 'Wins', value: profile.wins, accent: 'var(--color-shadow)', icon: '🏆' },
-          { label: 'Losses', value: profile.losses, accent: 'var(--color-oni)', icon: '⚔️' },
-          { label: 'Win Rate', value: `${winRate}%`, accent: 'var(--color-gold)', icon: '📈' },
-          { label: 'Level', value: profile.level, accent: 'var(--color-neon)', icon: '🥷' },
-          { label: 'Rank Points', value: profile.rank.points, accent: 'var(--color-neon-2)', icon: '👑' },
-          { label: 'Collection', value: `${collectionPercent}%`, accent: 'var(--color-shrine)', icon: '🎴' },
+          { label: 'Wins', value: profile.wins, accent: 'var(--color-shadow)', icon: 'ph:trophy-duotone' },
+          { label: 'Losses', value: profile.losses, accent: 'var(--color-oni)', icon: 'game-icons:broadsword' },
+          { label: 'Win Rate', value: `${winRate}%`, accent: 'var(--color-gold)', icon: 'ph:chart-line-up-duotone' },
+          { label: 'Level', value: profile.level, accent: 'var(--color-neon)', icon: 'game-icons:ninja-head' },
+          { label: 'Rank Points', value: profile.rank.points, accent: 'var(--color-neon-2)', icon: 'ph:crown-duotone' },
+          { label: 'Collection', value: `${collectionPercent}%`, accent: 'var(--color-shrine)', icon: 'game-icons:card-pickup' },
         ]}
       />
 
@@ -124,7 +125,7 @@ export default function ProfilePage() {
                           borderColor: `color-mix(in srgb, ${CLAN_COLOR[prism]} 50%, transparent)`,
                         }}
                       >
-                        {PRISM_META[prism].glyph} {PRISM_META[prism].label}
+                        <Icon icon={PRISM_META[prism].iconify} size={14} /> {PRISM_META[prism].label}
                       </span>
                     ))}
                   </div>
@@ -195,9 +196,15 @@ export default function ProfilePage() {
             <p className="stat-label">Cosmetics</p>
             <h2 className="mt-1 text-xl font-black">Badge Vault</h2>
             <div className="mt-4 flex flex-wrap gap-2">
-              {['🌙 Moonlit', '🔥 Ember', '💎 Prismatic', '🩸 Duelist', '⚡ Blitz'].map((badge) => (
-                <span key={badge} className="chip">
-                  {badge}
+              {[
+                { icon: 'ph:moon-stars-duotone', label: 'Moonlit' },
+                { icon: 'ph:fire-duotone', label: 'Ember' },
+                { icon: 'ph:diamond-duotone', label: 'Prismatic' },
+                { icon: 'ph:drop-duotone', label: 'Duelist' },
+                { icon: 'ph:lightning-fill', label: 'Blitz' },
+              ].map((badge) => (
+                <span key={badge.label} className="chip">
+                  <Icon icon={badge.icon} size={14} /> {badge.label}
                 </span>
               ))}
             </div>

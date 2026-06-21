@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from '@/components/Icon';
 // DeckSelector — shows the active deck and lets the player switch decks.
 import { useState } from 'react';
 import Link from 'next/link';
@@ -29,7 +30,7 @@ export default function DeckSelector() {
           <div className="mt-0.5 flex items-center gap-1.5">
             {active?.prisms.map((p) => (
               <span key={p} className="text-sm" style={{ color: CLAN_COLOR[p] }}>
-                {PRISM_META[p].glyph}
+                <Icon icon={PRISM_META[p].iconify} size={14} />
               </span>
             ))}
             <span className="text-xs text-[var(--color-muted)]">
@@ -59,7 +60,7 @@ export default function DeckSelector() {
               <span className="flex gap-1">
                 {d.prisms.map((p) => (
                   <span key={p} style={{ color: CLAN_COLOR[p] }}>
-                    {PRISM_META[p].glyph}
+                    <Icon icon={PRISM_META[p].iconify} size={14} />
                   </span>
                 ))}
               </span>

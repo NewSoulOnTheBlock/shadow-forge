@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from '@/components/Icon';
 import { useState } from 'react';
 import { cx } from '@/lib/ui';
 import { useAppStore } from '@/store/appStore';
@@ -83,7 +84,14 @@ export default function SettingsPage() {
   const [showHistory, setShowHistory] = useState(true);
 
   return (
-    <main className="mx-auto min-h-screen max-w-5xl space-y-6 px-4 py-8 pb-28 sm:px-6 lg:px-8">
+    <>
+      {/* Settings page backdrop — ninja-at-the-shrine key art (fixed, full-bleed). */}
+      <div
+        className="pointer-events-none fixed inset-0 -z-10 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/settings-bg.png')" }}
+      />
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-gradient-to-r from-black/55 via-black/70 to-black/85" />
+      <main className="mx-auto min-h-screen max-w-5xl space-y-6 px-4 py-8 pb-28 sm:px-6 lg:px-8">
       <section className="panel p-6">
         <p className="stat-label">Command Center</p>
         <h1 className="neon-text mt-1 text-4xl font-black tracking-tight sm:text-5xl">Settings</h1>
@@ -116,7 +124,7 @@ export default function SettingsPage() {
         <div className="mt-4 flex flex-wrap gap-3">
           {/* PLUG-IN POINT: connect wallet provider and store verified walletAddress. */}
           <button type="button" className="btn" disabled>
-            🔗 Connect Wallet <span className="text-xs">(coming soon)</span>
+            <Icon icon="ph:link-duotone" size={16} /> Connect Wallet <span className="text-xs">(coming soon)</span>
           </button>
           {/* PLUG-IN POINT: call auth sign-out and clear client stores. */}
           <button type="button" className="btn">
@@ -203,5 +211,6 @@ export default function SettingsPage() {
         </div>
       </div>
     </main>
+    </>
   );
 }

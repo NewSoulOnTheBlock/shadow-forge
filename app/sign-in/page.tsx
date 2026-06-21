@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from '@/components/Icon';
 // Sign-in screen — ornate two-panel "scroll" framed in gold/red marble with a
 // shuriken medallion on the top edge.
 //   LEFT panel: `public/signin-art.png` (hooded ninja overlooking a moonlit
@@ -281,7 +282,7 @@ export default function SignInPage() {
                           className="flex w-full items-center gap-3 rounded-lg border border-[var(--color-line)] bg-[var(--color-panel-2)] px-3 py-2.5 text-left text-sm font-bold transition hover:border-[var(--color-neon-2)] hover:bg-[var(--color-panel)] disabled:opacity-50"
                         >
                           {/* eslint-disable-next-line @next/next/no-img-element */}
-                          {w.icon ? <img src={w.icon} alt="" className="h-6 w-6 rounded-md" /> : <span className="text-lg">👛</span>}
+                          {w.icon ? <img src={w.icon} alt="" className="h-6 w-6 rounded-md" /> : <Icon icon="ph:wallet-duotone" size={18} />}
                           <span className="flex-1">{busy === w.name ? 'Check your wallet…' : `Continue with ${w.name}`}</span>
                           {busy === w.name && (
                             <span className="h-4 w-4 animate-spin rounded-full border-2 border-[var(--color-neon-2)] border-t-transparent" />

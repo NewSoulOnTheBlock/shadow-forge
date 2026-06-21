@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from '@/components/Icon';
 // Home / Play hub — full-screen frame layout.
 //   The art frame `public/home-bg.png` is stretched to fill the whole viewport
 //   (background-size: 100% 100%, so it never leaves empty space) and every piece
@@ -93,7 +94,7 @@ export default function PlayPage() {
           className="mb-2 w-fit rounded-full border border-[var(--color-neon)] px-2.5 py-1 font-bold text-[var(--color-neon)]"
           style={{ fontSize: 'clamp(8px,0.78vw,13px)' }}
         >
-          ⚡ Season 1 · Clan Wars
+          <Icon icon="ph:lightning-fill" size={16} /> Season 1 · Clan Wars
         </span>
         <h1
           className="font-black leading-[1.05] drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]"
@@ -118,7 +119,7 @@ export default function PlayPage() {
             style={{ fontSize: 'clamp(9px,0.9vw,14px)', padding: '0.5em 1em' }}
             onClick={() => setQueue('ranked')}
           >
-            ⚔️ Play Ranked
+            <Icon icon="game-icons:crossed-swords" size={16} /> Play Ranked
           </motion.button>
           <motion.button
             whileHover={{ scale: 1.04 }}
@@ -127,7 +128,7 @@ export default function PlayPage() {
             style={{ fontSize: 'clamp(9px,0.9vw,14px)', padding: '0.5em 1em' }}
             onClick={() => setQueue('casual')}
           >
-            🎴 Play Casual
+            <Icon icon="ph:cards-duotone" size={16} /> Play Casual
           </motion.button>
         </div>
       </Region>
@@ -288,7 +289,7 @@ export default function PlayPage() {
             Daily Reward
           </div>
           <div className="text-[var(--color-muted)]" style={{ fontSize: 'clamp(7px,0.66vw,11px)' }}>
-            💠 +120 Shards ready
+            <Icon icon="ph:coins-duotone" size={14} /> +120 Shards ready
           </div>
         </div>
         <button

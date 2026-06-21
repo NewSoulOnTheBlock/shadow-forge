@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from '@/components/Icon';
 // DeckList — the current deck's cards as compact rows (cost · name · stats · remove).
 import { getCard } from '@/lib/game/cards';
 import { CLAN_COLOR, PRISM_META, cx } from '@/lib/ui';
@@ -51,7 +52,7 @@ export default function DeckList({
               {c.name}
             </button>
             <span style={{ color: CLAN_COLOR[c.prism] }} title={PRISM_META[c.prism].label}>
-              {PRISM_META[c.prism].glyph}
+              <Icon icon={PRISM_META[c.prism].iconify} size={14} />
             </span>
             {c.type === 'unit' && (
               <span className="hidden text-[11px] font-bold text-[var(--color-muted)] sm:inline">
@@ -63,7 +64,7 @@ export default function DeckList({
               className="grid h-5 w-5 place-items-center rounded text-[var(--color-muted)] transition hover:bg-[var(--color-oni)]/20 hover:text-[var(--color-oni)]"
               title="Remove"
             >
-              ✕
+              <Icon icon="ph:x-bold" size={13} />
             </button>
           </div>
         );

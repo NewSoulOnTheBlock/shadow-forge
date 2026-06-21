@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from '@/components/Icon';
 // HeroPortrait — a hero avatar with HP, mana, deck count. Can be a target.
 import { motion } from 'framer-motion';
 import { cx } from '@/lib/ui';
@@ -35,7 +36,7 @@ export default function HeroPortrait({
       >
         {side.avatar}
         {targetable && (
-          <span className="absolute -right-1 -top-1 text-lg">🎯</span>
+          <Icon icon="ph:target-duotone" size={18} className="absolute -right-1 -top-1" />
         )}
       </motion.button>
 
@@ -44,7 +45,7 @@ export default function HeroPortrait({
         <HealthDisplay hp={side.hp} maxHp={side.maxHp} />
         <ResourceDisplay mana={side.mana} maxMana={side.maxMana} />
         <span className="text-[11px] text-[var(--color-muted)]">
-          🂠 {side.deckCount} · ✋ {side.hand.length} · ⚰ {side.graveyard.length}
+          <Icon icon="ph:cards-duotone" size={13} /> {side.deckCount} · <Icon icon="ph:hand-duotone" size={13} /> {side.hand.length} · <Icon icon="game-icons:tombstone" size={13} /> {side.graveyard.length}
         </span>
       </div>
     </div>

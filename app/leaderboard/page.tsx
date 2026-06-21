@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from '@/components/Icon';
 // =============================================================================
 // Leaderboard (spec section: ranked ladder).
 // Full-frame overlay: `public/leaderboard-bg.png` paints the chrome (top nav,
@@ -102,8 +103,8 @@ export default function LeaderboardPage() {
               {p.entry.rankTier}
             </div>
             {/* two painted stat sub-boxes: points (left), wins (right) */}
-            <Stat value={`💎 ${p.entry.points}`} style={{ left: '29%', top: '84%' }} />
-            <Stat value={`🏆 ${p.entry.wins}`} style={{ left: '72%', top: '84%' }} />
+            <Stat value={<><Icon icon="ph:diamond-duotone" size={16} /> {p.entry.points}</>} style={{ left: '29%', top: '84%' }} />
+            <Stat value={<><Icon icon="ph:trophy-duotone" size={16} /> {p.entry.wins}</>} style={{ left: '72%', top: '84%' }} />
           </motion.div>
         ) : null,
       )}
@@ -120,8 +121,8 @@ export default function LeaderboardPage() {
           <span className="ml-auto flex items-center gap-5 text-sm font-bold">
             <span>#{self.position}</span>
             <span style={{ color: tierColor(self.rankTier) }}>{self.rankTier}</span>
-            <span className="text-[var(--color-gold)]">💎 {self.points}</span>
-            <span>🏆 {self.wins}</span>
+            <span className="inline-flex items-center gap-1 text-[var(--color-gold)]"><Icon icon="ph:diamond-duotone" size={16} /> {self.points}</span>
+            <span className="inline-flex items-center gap-1"><Icon icon="ph:trophy-duotone" size={16} /> {self.wins}</span>
           </span>
         </div>
       )}
@@ -163,7 +164,7 @@ export default function LeaderboardPage() {
   );
 }
 
-function Stat({ value, style }: { value: string; style: React.CSSProperties }) {
+function Stat({ value, style }: { value: React.ReactNode; style: React.CSSProperties }) {
   return (
     <div
       className="absolute -translate-x-1/2 -translate-y-1/2 whitespace-nowrap text-center text-xs font-black"

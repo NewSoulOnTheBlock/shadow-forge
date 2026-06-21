@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from '@/components/Icon';
 import { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import CardPreviewModal from '@/components/CardPreviewModal';
@@ -122,7 +123,7 @@ export default function CollectionGrid({
             <p className="stat-label">Vault</p>
             <h2 className="text-xl font-black">{sortedCards.length} cards shown</h2>
           </div>
-          {favoritesOnly && <span className="chip border-[var(--color-gold)] text-[var(--color-gold)]">⭐ Favorites</span>}
+          {favoritesOnly && <span className="chip border-[var(--color-gold)] text-[var(--color-gold)]"><Icon icon="ph:star-fill" size={16} /> Favorites</span>}
         </div>
 
         {sortedCards.length ? (
@@ -157,7 +158,7 @@ export default function CollectionGrid({
           <div className="panel grid min-h-[260px] place-items-center p-8 text-center">
             <div>
               <div className="mx-auto mb-3 grid h-14 w-14 place-items-center rounded-full border border-[var(--color-line)] bg-[var(--color-panel-2)] text-2xl">
-                🥷
+                <Icon icon="game-icons:ninja-head" size={26} />
               </div>
               <h3 className="text-lg font-black">No cards match this stance</h3>
               <p className="mt-1 text-sm text-[var(--color-muted)]">
@@ -176,7 +177,7 @@ export default function CollectionGrid({
             <div className="flex w-full flex-col gap-3">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <button className="btn-gold" onClick={() => toggleFavorite(selected.id)}>
-                  {favorites.has(selected.id) ? '⭐ Unfavorite' : '⭐ Favorite'}
+                  <><Icon icon="ph:star-fill" size={16} /> {favorites.has(selected.id) ? 'Unfavorite' : 'Favorite'}</>
                 </button>
                 <span className="chip">{RARITY_LABEL[db.cardRarity(selected)]}</span>
               </div>

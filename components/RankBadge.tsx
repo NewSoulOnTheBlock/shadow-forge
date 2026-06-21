@@ -1,14 +1,15 @@
 // RankBadge — shows a player's ladder rank with tier color.
 import type { Rank, RankTier } from '@/lib/types';
 import { cx } from '@/lib/ui';
+import Icon from '@/components/Icon';
 
 const TIER: Record<RankTier, { color: string; glyph: string }> = {
-  Bronze: { color: '#cd7f32', glyph: '🥉' },
-  Silver: { color: '#c0c7d4', glyph: '🥈' },
-  Gold: { color: '#ffce5c', glyph: '🥇' },
-  Platinum: { color: '#5ce1e6', glyph: '💎' },
-  Diamond: { color: '#7aa7ff', glyph: '🔷' },
-  Mythic: { color: '#c061ff', glyph: '👑' },
+  Bronze: { color: '#cd7f32', glyph: 'ph:medal-duotone' },
+  Silver: { color: '#c0c7d4', glyph: 'ph:medal-duotone' },
+  Gold: { color: '#ffce5c', glyph: 'ph:medal-duotone' },
+  Platinum: { color: '#5ce1e6', glyph: 'ph:diamond-duotone' },
+  Diamond: { color: '#7aa7ff', glyph: 'ph:diamonds-four-duotone' },
+  Mythic: { color: '#c061ff', glyph: 'ph:crown-simple-duotone' },
 };
 
 export const tierColor = (t: RankTier) => TIER[t].color;
@@ -33,7 +34,9 @@ export default function RankBadge({
         background: `color-mix(in srgb, ${t.color} 12%, transparent)`,
       }}
     >
-      <span className={big ? 'text-2xl' : 'text-lg'}>{t.glyph}</span>
+      <span className={big ? 'text-2xl' : 'text-lg'} style={{ color: t.color }}>
+        <Icon icon={t.glyph} size={big ? 26 : 18} />
+      </span>
       <div className="leading-tight">
         <div
           className={cx('font-black', big ? 'text-lg' : 'text-sm')}

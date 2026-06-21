@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from '@/components/Icon';
 // DeckStats — mana curve + type/rarity breakdowns for the deck builder.
 import { useMemo } from 'react';
 import { getCard } from '@/lib/game/cards';
@@ -91,7 +92,7 @@ export default function DeckStats({ cardIds }: { cardIds: string[] }) {
         <div className="flex flex-wrap gap-1.5">
           {(Object.entries(stats.clans) as [Prism, number][]).map(([p, n]) => (
             <span key={p} className="chip" style={{ color: CLAN_COLOR[p] }}>
-              {PRISM_META[p].glyph} {n}
+              <Icon icon={PRISM_META[p].iconify} size={14} /> {n}
             </span>
           ))}
         </div>

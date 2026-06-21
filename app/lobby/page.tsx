@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from '@/components/Icon';
 // =============================================================================
 // Lobby (spec section: multiplayer lobby system).
 // Full-frame overlay: `public/lobby-bg.png` paints the chrome (top nav, room
@@ -245,7 +246,7 @@ export default function LobbyPage() {
             title={option}
             className={`flex-1 rounded-lg text-lg transition ${visibility === option ? 'bg-[var(--color-neon)]/25 ring-1 ring-[var(--color-neon)]' : 'opacity-50 hover:opacity-90'}`}
           >
-            {option === 'public' ? '⚔️' : '🛡️'}
+            {option === 'public' ? <Icon icon="game-icons:crossed-swords" size={18} /> : <Icon icon="ph:shield-duotone" size={18} />}
           </button>
         ))}
       </Region>

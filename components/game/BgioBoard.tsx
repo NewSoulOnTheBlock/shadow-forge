@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from '@/components/Icon';
 // BgioBoard — the Legend of Ki battlefield, driven by the REAL boardgame.io
 // engine (SkyforgeGame). It reads authoritative state from `G`/`ctx` and issues
 // `moves`/`events` instead of the placeholder gameStore. This is the board that
@@ -390,7 +391,7 @@ export default function BgioBoard(props: BoardProps<GState> & ExtraProps) {
               animate={{ scale: 1, y: 0 }}
               className="panel flex flex-col items-center gap-4 px-12 py-10 text-center"
             >
-              <div className="text-6xl">{result === 'win' ? '🏆' : result === 'lose' ? '💀' : '⚖️'}</div>
+              <div className="text-6xl">{result === 'win' ? <Icon icon="ph:trophy-duotone" size={64} /> : result === 'lose' ? <Icon icon="ph:skull-duotone" size={64} /> : <Icon icon="ph:scales-duotone" size={64} />}</div>
               <h2 className="neon-text text-3xl font-black">
                 {result === 'win' ? 'Victory' : result === 'lose' ? 'Defeat' : 'Draw'}
               </h2>
@@ -452,13 +453,13 @@ function HeroPanel({
         style={{ background: 'radial-gradient(circle at 50% 30%, #1c1f33, #0b0c16)' }}
       >
         {avatar}
-        {targetable && <span className="absolute -right-1 -top-1 text-lg">🎯</span>}
+        {targetable && <Icon icon="ph:target-duotone" size={18} className="absolute -right-1 -top-1" />}
       </motion.button>
       <div className="flex flex-col gap-1">
         <span className="text-sm font-bold">{name}</span>
         <HealthDisplay hp={hp} maxHp={maxHp} />
         <ResourceDisplay mana={mana} maxMana={maxMana} />
-        <span className="text-[11px] text-[var(--color-muted)]">🂠 {deckCount} · ✋ {handCount}</span>
+        <span className="inline-flex items-center gap-1 text-[11px] text-[var(--color-muted)]"><Icon icon="ph:cards-duotone" size={13} /> {deckCount} · <Icon icon="ph:hand-duotone" size={13} /> {handCount}</span>
       </div>
     </div>
   );

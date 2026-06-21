@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from '@/components/Icon';
 // Shared hover-zoom used across the app so any card-like element pops a large,
 // fully-readable preview when hovered. Rendered through a portal to <body> so it
 // is never clipped by scroll containers or the match board's overflow.
@@ -80,7 +81,7 @@ export function CardZoom({ card, left, top }: { card: Card; left: number; top: n
 
         <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[11px]">
           <span className="chip" style={{ color: clan }}>
-            {PRISM_META[card.prism].glyph} {PRISM_META[card.prism].label}
+            <Icon icon={PRISM_META[card.prism].iconify} size={14} /> {PRISM_META[card.prism].label}
           </span>
           <span className="chip" style={{ color: RARITY_COLOR[rarity] }}>
             {RARITY_LABEL[rarity]}
@@ -105,8 +106,8 @@ export function CardZoom({ card, left, top }: { card: Card; left: number; top: n
 
         {card.type === 'unit' && (
           <div className="mt-3 flex justify-center gap-6 text-xl font-black">
-            <span className="text-[var(--color-oni)]">{card.attack ?? 0} ⚔</span>
-            <span className="text-[var(--color-shadow)]">{card.health ?? 0} ❤</span>
+            <span className="inline-flex items-center gap-1 text-[var(--color-oni)]">{card.attack ?? 0} <Icon icon="game-icons:broadsword" size={20} /></span>
+            <span className="inline-flex items-center gap-1 text-[var(--color-shadow)]">{card.health ?? 0} <Icon icon="ph:heart-fill" size={20} /></span>
           </div>
         )}
 
@@ -119,7 +120,7 @@ export function CardZoom({ card, left, top }: { card: Card; left: number; top: n
             {card.keywords.map((k) => (
               <div key={k} className="text-[11px] leading-tight">
                 <span className="font-bold">
-                  {KEYWORD_META[k].icon} {KEYWORD_META[k].label}
+                  <Icon icon={KEYWORD_META[k].iconify} size={14} /> {KEYWORD_META[k].label}
                 </span>
                 <span className="text-[var(--color-muted)]"> — {KEYWORD_META[k].tip}</span>
               </div>

@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from '@/components/Icon';
 // HealthDisplay — hero HP pill.
 import { cx } from '@/lib/ui';
 
@@ -22,7 +23,7 @@ export default function HealthDisplay({
       )}
       style={{ background: low ? 'rgba(255,90,77,0.12)' : 'rgba(0,0,0,0.35)' }}
     >
-      <span>❤</span>
+      <Icon icon="ph:heart-fill" size={size === 'md' ? 18 : 14} />
       <span>{Math.max(0, hp)}</span>
       <span className="text-[10px] font-normal text-[var(--color-muted)]">/{maxHp}</span>
     </div>

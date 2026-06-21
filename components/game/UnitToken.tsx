@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from '@/components/Icon';
 // UnitToken — a single unit on the battlefield.
 import { motion } from 'framer-motion';
 import { getCard } from '@/lib/game/cards';
@@ -54,7 +55,7 @@ export default function UnitToken({
         <div className="absolute left-0.5 top-0.5 flex flex-col gap-0.5">
           {unit.keywords.slice(0, 3).map((k) => (
             <span key={k} className="text-[10px]" title={KEYWORD_META[k].label}>
-              {KEYWORD_META[k].icon}
+              <Icon icon={KEYWORD_META[k].iconify} size={11} />
             </span>
           ))}
         </div>
@@ -74,7 +75,7 @@ export default function UnitToken({
       </span>
 
       {ready && !selected && (
-        <span className="absolute -top-1.5 right-0 text-[10px]">⚡</span>
+        <Icon icon="ph:lightning-fill" size={13} className="absolute -top-1.5 right-0" />
       )}
 
       {/* large readable card on hover */}

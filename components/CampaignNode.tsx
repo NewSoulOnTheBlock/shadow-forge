@@ -1,3 +1,4 @@
+import Icon from '@/components/Icon';
 import { motion } from 'framer-motion';
 import type { CampaignNode as CampaignNodeType, Difficulty } from '@/lib/types';
 import { cx } from '@/lib/ui';
@@ -42,12 +43,12 @@ export default function CampaignNode({ node, selected, onSelect }: CampaignNodeP
         {node.opponentAvatar}
         {!node.unlocked && (
           <span className="absolute inset-0 grid place-items-center rounded-full bg-black/55 text-xl" aria-hidden="true">
-            🔒
+            <Icon icon="ph:lock-duotone" size={26} />
           </span>
         )}
         {node.completed && (
           <span className="absolute -right-1 -top-1 grid h-6 w-6 place-items-center rounded-full border border-[var(--color-line)] bg-[var(--color-shadow)] text-xs font-black text-black">
-            ✓
+            <Icon icon="ph:check-bold" size={13} />
           </span>
         )}
       </span>

@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from '@/components/Icon';
 // RewardPanel — daily login reward track (placeholder claim logic).
 import { useState } from 'react';
 import type { Reward } from '@/lib/types';
@@ -42,7 +43,7 @@ export default function RewardPanel({ rewards }: { rewards: Reward[] }) {
               {r.amount && (
                 <span className="text-[9px] text-[var(--color-muted)]">+{r.amount}</span>
               )}
-              {isClaimed && <span className="text-[9px] text-[var(--color-shadow)]">✓</span>}
+              {isClaimed && <Icon icon="ph:check-bold" size={13} className="text-[var(--color-shadow)]" />}
             </button>
           );
         })}

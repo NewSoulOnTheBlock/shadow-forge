@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from '@/components/Icon';
 import { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import PlayerAvatar from '@/components/PlayerAvatar';
@@ -23,7 +24,7 @@ function formatTimer(seconds: number) {
 function DeckOption({ deck }: { deck: Deck }) {
   return (
     <>
-      {deck.prisms.map((prism) => PRISM_META[prism].glyph).join(' ')} {deck.name}
+      {deck.prisms.map((prism) => <Icon key={prism} icon={PRISM_META[prism].iconify} size={14} />)} {deck.name}
     </>
   );
 }
@@ -137,7 +138,7 @@ export default function LobbyRoom({ lobby, isHost, onLeave, onStart }: Props) {
                   <div className="mt-3 flex flex-wrap gap-2">
                     {selectedDeck.prisms.map((prism) => (
                       <span key={prism} className="chip" style={{ color: CLAN_COLOR[prism] }}>
-                        {PRISM_META[prism].glyph} {PRISM_META[prism].label}
+                        <Icon icon={PRISM_META[prism].iconify} size={14} /> {PRISM_META[prism].label}
                       </span>
                     ))}
                   </div>

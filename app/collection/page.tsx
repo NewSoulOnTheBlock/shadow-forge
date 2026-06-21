@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from '@/components/Icon';
 import { useMemo, useState } from 'react';
 import { CardFilters, useCardFilter } from '@/components/CardFilters';
 import CollectionGrid, { type CollectionSort } from '@/components/collection/CollectionGrid';
@@ -88,7 +89,7 @@ export default function CollectionPage() {
                 className={cx('chip transition hover:border-[var(--color-gold)]', favoritesOnly && 'border-[var(--color-gold)] text-[var(--color-gold)]')}
                 onClick={() => setFavoritesOnly((value) => !value)}
               >
-                ⭐ Favorites {favorites.size ? `(${favorites.size})` : ''}
+                <Icon icon="ph:star-fill" size={16} /> Favorites {favorites.size ? `(${favorites.size})` : ''}
               </button>
 
               <label className="chip flex cursor-pointer items-center gap-2">

@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from '@/components/Icon';
 // Shared card filtering: a hook + a sidebar UI. Used by the deck builder and
 // the collection page so both share identical filter semantics.
 import { useMemo, useState } from 'react';
@@ -75,12 +76,15 @@ export function CardFilters({
   const prisms = allowedPrisms ?? PRISMS;
   return (
     <div className="space-y-4">
-      <input
-        value={filter.search}
-        onChange={(e) => setFilter({ ...filter, search: e.target.value })}
-        placeholder="🔍 Search cards…"
-        className="w-full rounded-lg border border-[var(--color-line)] bg-[var(--color-panel)] px-3 py-2 text-sm outline-none focus:border-[var(--color-neon)]"
-      />
+      <div className="relative">
+        <Icon icon="ph:magnifying-glass-bold" size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-muted)]" />
+        <input
+          value={filter.search}
+          onChange={(e) => setFilter({ ...filter, search: e.target.value })}
+          placeholder="Search cards…"
+          className="w-full rounded-lg border border-[var(--color-line)] bg-[var(--color-panel)] py-2 pl-9 pr-3 text-sm outline-none focus:border-[var(--color-neon)]"
+        />
+      </div>
 
       <div>
         <div className="stat-label mb-1.5">Clan</div>
@@ -92,7 +96,7 @@ export function CardFilters({
               className={cx('chip', filter.prisms.has(p) && 'border-current')}
               style={{ color: filter.prisms.has(p) ? CLAN_COLOR[p] : undefined }}
             >
-              {PRISM_META[p].glyph} {PRISM_META[p].label}
+              <Icon icon={PRISM_META[p].iconify} size={14} /> {PRISM_META[p].label}
             </button>
           ))}
         </div>

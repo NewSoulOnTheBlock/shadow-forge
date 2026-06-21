@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from '@/components/Icon';
 // MatchBoard — the full battlefield. Reads/writes the live match via useGameStore.
 //   PLUG-IN POINT: every interaction here calls a gameStore action. To go online,
 //   forward these to boardgame.io moves / Socket.io events instead.
@@ -249,7 +250,7 @@ export default function MatchBoard() {
               animate={{ scale: 1, y: 0 }}
               className="panel flex flex-col items-center gap-4 px-12 py-10 text-center"
             >
-              <div className="text-6xl">{winner === 'player' ? '🏆' : '💀'}</div>
+              <div className="text-6xl">{winner === 'player' ? <Icon icon="ph:trophy-duotone" size={64} /> : <Icon icon="ph:skull-duotone" size={64} />}</div>
               <h2 className="neon-text text-3xl font-black">
                 {winner === 'player' ? 'Victory' : 'Defeat'}
               </h2>

@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from '@/components/Icon';
 // QueueModal — matchmaking overlay for Ranked / Casual.
 // PLUG-IN POINT: replace the simulated timer + "match found" with a real
 // matchmaking service (WebSocket queue). On match, the server returns a matchId.
@@ -87,7 +88,7 @@ export default function QueueModal({
               animate={{ scale: 1, opacity: 1 }}
               className="my-6"
             >
-              <div className="text-5xl">⚔️</div>
+              <div className="text-5xl"><Icon icon="game-icons:crossed-swords" size={56} /></div>
               <h3 className="mt-2 text-2xl font-black neon-text">Match Found!</h3>
               <p className="text-sm text-[var(--color-muted)]">A worthy rival approaches.</p>
             </motion.div>
@@ -101,7 +102,7 @@ export default function QueueModal({
                 {deck?.coverArt} {deck?.name}
                 {deck?.prisms.map((p) => (
                   <span key={p} style={{ color: CLAN_COLOR[p] }}>
-                    {PRISM_META[p].glyph}
+                    <Icon icon={PRISM_META[p].iconify} size={14} />
                   </span>
                 ))}
               </span>

@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from '@/components/Icon';
 // =============================================================================
 // Deck Builder (spec section 6).
 // Singleton format: max 1 copy per card, 1–2 clans, 15–25 cards (RULES).
@@ -184,7 +185,7 @@ export default function DeckBuilderPage() {
                 )}
                 style={{ color: prisms.includes(p) ? CLAN_COLOR[p] : undefined }}
               >
-                {PRISM_META[p].glyph} {PRISM_META[p].label}
+                <Icon icon={PRISM_META[p].iconify} size={14} /> {PRISM_META[p].label}
               </button>
             ))}
           </div>
@@ -243,7 +244,7 @@ export default function DeckBuilderPage() {
               {prisms.length ? (
                 prisms.map((p) => (
                   <span key={p} style={{ color: CLAN_COLOR[p] }}>
-                    {PRISM_META[p].glyph}
+                    <Icon icon={PRISM_META[p].iconify} size={14} />
                   </span>
                 ))
               ) : (
@@ -289,7 +290,7 @@ export default function DeckBuilderPage() {
 
           <div className="grid grid-cols-2 gap-1.5">
             <button className="btn btn-primary text-xs" disabled={!!error} onClick={save}>
-              💾 Save
+              <Icon icon="ph:floppy-disk-duotone" size={16} /> Save
             </button>
             <button
               className="btn text-xs"
@@ -299,7 +300,7 @@ export default function DeckBuilderPage() {
                 setNotice('Set as active deck ✓');
               }}
             >
-              ⭐ Active
+              <Icon icon="ph:star-fill" size={16} /> Active
             </button>
             <button
               className="btn text-xs"
@@ -322,7 +323,7 @@ export default function DeckBuilderPage() {
                 if (remaining) loadDeck(remaining.id);
               }}
             >
-              🗑 Delete
+              <Icon icon="ph:trash-duotone" size={16} /> Delete
             </button>
           </div>
 
@@ -334,7 +335,7 @@ export default function DeckBuilderPage() {
               router.push('/play');
             }}
           >
-            ⚔️ Battle with this deck
+            <Icon icon="game-icons:crossed-swords" size={16} /> Battle with this deck
           </button>
         </div>
       </Region>

@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from '@/components/Icon';
 // CardPreviewModal — large card zoom with full text + keyword glossary.
 import { motion, AnimatePresence } from 'framer-motion';
 import type { Card } from '@/lib/types';
@@ -47,7 +48,7 @@ export default function CardPreviewModal({ card, onClose, footer }: Props) {
                     className="chip"
                     style={{ color: CLAN_COLOR[card.prism] }}
                   >
-                    {PRISM_META[card.prism].glyph} {PRISM_META[card.prism].label}
+                    <Icon icon={PRISM_META[card.prism].iconify} size={14} /> {PRISM_META[card.prism].label}
                   </span>
                   <span
                     className="chip"
@@ -61,8 +62,8 @@ export default function CardPreviewModal({ card, onClose, footer }: Props) {
 
                 {card.type === 'unit' && (
                   <div className="mt-3 flex gap-4 text-lg font-black">
-                    <span className="text-[var(--color-oni)]">{card.attack ?? 0} ⚔</span>
-                    <span className="text-[var(--color-shadow)]">{card.health ?? 0} ❤</span>
+                    <span className="inline-flex items-center gap-1 text-[var(--color-oni)]">{card.attack ?? 0} <Icon icon="game-icons:broadsword" size={18} /></span>
+                    <span className="inline-flex items-center gap-1 text-[var(--color-shadow)]">{card.health ?? 0} <Icon icon="ph:heart-fill" size={18} /></span>
                   </div>
                 )}
 
@@ -75,7 +76,7 @@ export default function CardPreviewModal({ card, onClose, footer }: Props) {
                     {card.keywords.map((k) => (
                       <div key={k} className="text-xs">
                         <span className="font-bold">
-                          {KEYWORD_META[k].icon} {KEYWORD_META[k].label}
+                          <Icon icon={KEYWORD_META[k].iconify} size={14} /> {KEYWORD_META[k].label}
                         </span>
                         <span className="text-[var(--color-muted)]"> — {KEYWORD_META[k].tip}</span>
                       </div>

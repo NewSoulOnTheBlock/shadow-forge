@@ -5,14 +5,15 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAppStore } from '@/store/appStore';
 import { cx } from '@/lib/ui';
+import Icon from '@/components/Icon';
 
 const LINKS = [
-  { href: '/play', label: 'Play', icon: '⚔️' },
-  { href: '/single-player', label: 'Campaign', icon: '🗺️' },
-  { href: '/lobby', label: 'Lobby', icon: '🏯' },
-  { href: '/deck-builder', label: 'Decks', icon: '🛠️' },
-  { href: '/collection', label: 'Collection', icon: '🎴' },
-  { href: '/leaderboard', label: 'Ranks', icon: '🏆' },
+  { href: '/play', label: 'Play', icon: 'game-icons:crossed-swords' },
+  { href: '/single-player', label: 'Campaign', icon: 'game-icons:treasure-map' },
+  { href: '/lobby', label: 'Lobby', icon: 'game-icons:shinto-shrine' },
+  { href: '/deck-builder', label: 'Decks', icon: 'ph:cards-three-duotone' },
+  { href: '/collection', label: 'Collection', icon: 'game-icons:card-pickup' },
+  { href: '/leaderboard', label: 'Ranks', icon: 'ph:trophy-duotone' },
 ];
 
 export default function TopNav() {
@@ -38,7 +39,7 @@ export default function TopNav() {
       <nav className="mx-auto flex h-16 max-w-7xl items-center gap-2 px-4">
         <Link href="/play" className="mr-2 flex items-center gap-2">
           <span className="grid h-9 w-9 place-items-center rounded-lg bg-gradient-to-br from-[var(--color-neon)] to-[var(--color-neon-2)] text-lg text-black shadow-lg">
-            🥷
+            <Icon icon="game-icons:ninja-head" size={22} />
           </span>
           <span className="hidden text-lg font-black tracking-tight sm:block">
             LEGEND OF <span className="neon-text">KI</span>
@@ -59,7 +60,7 @@ export default function TopNav() {
                     : 'text-[var(--color-muted)] hover:bg-white/5 hover:text-[var(--color-ink)]',
                 )}
               >
-                <span className="text-base">{l.icon}</span>
+                <Icon icon={l.icon} size={18} />
                 <span className="hidden md:inline">{l.label}</span>
               </Link>
             );
@@ -68,7 +69,7 @@ export default function TopNav() {
 
         <div className="flex items-center gap-3">
           <div className="hidden items-center gap-1.5 rounded-lg border border-[var(--color-line)] bg-white/5 px-2.5 py-1.5 text-sm font-bold text-[var(--color-gold)] sm:flex">
-            💠 {profile.currency.toLocaleString()}
+            <Icon icon="ph:coins-duotone" size={16} /> {profile.currency.toLocaleString()}
           </div>
           <div className="relative">
             <button
@@ -83,7 +84,7 @@ export default function TopNav() {
                 <div className="text-xs font-bold">{profile.displayName}</div>
                 <div className="text-[10px] text-[var(--color-muted)]">Lv {profile.level}</div>
               </div>
-              <span className="text-[10px] text-[var(--color-muted)]">▾</span>
+              <span className="text-[10px] text-[var(--color-muted)]"><Icon icon="ph:caret-down-bold" size={12} /></span>
             </button>
 
             {menuOpen && (
@@ -93,16 +94,16 @@ export default function TopNav() {
                   <Link
                     href="/profile"
                     onClick={() => setMenuOpen(false)}
-                    className="block px-4 py-2.5 text-sm font-semibold text-[var(--color-muted)] transition hover:bg-white/5 hover:text-[var(--color-ink)]"
+                    className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-[var(--color-muted)] transition hover:bg-white/5 hover:text-[var(--color-ink)]"
                   >
-                    👤 Profile
+                    <Icon icon="ph:user-duotone" size={16} /> Profile
                   </Link>
                   <Link
                     href="/settings"
                     onClick={() => setMenuOpen(false)}
-                    className="block px-4 py-2.5 text-sm font-semibold text-[var(--color-muted)] transition hover:bg-white/5 hover:text-[var(--color-ink)]"
+                    className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-[var(--color-muted)] transition hover:bg-white/5 hover:text-[var(--color-ink)]"
                   >
-                    ⚙️ Settings
+                    <Icon icon="ph:gear-six-duotone" size={16} /> Settings
                   </Link>
                   <button
                     type="button"
@@ -110,16 +111,16 @@ export default function TopNav() {
                       setMenuOpen(false);
                       void logout();
                     }}
-                    className="block w-full px-4 py-2.5 text-left text-sm font-semibold text-[var(--color-oni)] transition hover:bg-white/5"
+                    className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm font-semibold text-[var(--color-oni)] transition hover:bg-white/5"
                   >
-                    🚪 Sign Out
+                    <Icon icon="ph:sign-out-duotone" size={16} /> Sign Out
                   </button>
                 </div>
               </>
             )}
           </div>
           <Link href="/settings" className="grid h-9 w-9 place-items-center rounded-lg border border-[var(--color-line)] text-[var(--color-muted)] transition hover:border-[var(--color-neon)] hover:text-[var(--color-ink)]">
-            ⚙️
+            <Icon icon="ph:gear-six-duotone" size={18} />
           </Link>
         </div>
       </nav>

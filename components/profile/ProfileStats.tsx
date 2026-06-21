@@ -1,3 +1,4 @@
+import Icon from '@/components/Icon';
 import { cx } from '@/lib/ui';
 
 type StatItem = {
@@ -29,7 +30,7 @@ export default function ProfileStats({ items }: { items: StatItem[] }) {
                 {item.value}
               </p>
             </div>
-            {item.icon && <span className="text-2xl opacity-80">{item.icon}</span>}
+            {item.icon && <Icon icon={item.icon} size={26} className="opacity-80" />}
           </div>
         </div>
       ))}

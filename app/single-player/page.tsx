@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from '@/components/Icon';
 // Campaign hub — full-screen frame layout.
 //   The art frame `public/campaign-bg.png` is stretched to fill the whole viewport
 //   (background-size: 100% 100%, so it never leaves empty space) and every piece of
@@ -65,10 +66,10 @@ const NODE_POS: { x: number; y: number }[] = [
 ];
 
 const TUTORIALS = [
-  { id: 1, title: 'Basics: Summoning', icon: '🥷', description: 'Learn how to call ninja allies, read costs, and build an opening board.', state: 'Complete', locked: false, progress: 100 },
-  { id: 2, title: 'Combat & Guard', icon: '⚔️', description: 'Master attacks, guard windows, and tempo trades before entering the wilds.', state: 'In progress', locked: false, progress: 45 },
-  { id: 3, title: 'Spells & Targeting', icon: '📜', description: 'Practice spell timing, valid targets, and response sequencing.', state: 'Ready', locked: false, progress: 0 },
-  { id: 4, title: 'Keywords', icon: '✨', description: 'A guided gauntlet for stealth, guard, rush, and clan-specific text.', state: 'Locked', locked: true, progress: 0 },
+  { id: 1, title: 'Basics: Summoning', icon: 'game-icons:ninja-head', description: 'Learn how to call ninja allies, read costs, and build an opening board.', state: 'Complete', locked: false, progress: 100 },
+  { id: 2, title: 'Combat & Guard', icon: 'game-icons:crossed-swords', description: 'Master attacks, guard windows, and tempo trades before entering the wilds.', state: 'In progress', locked: false, progress: 45 },
+  { id: 3, title: 'Spells & Targeting', icon: 'game-icons:scroll-unfurled', description: 'Practice spell timing, valid targets, and response sequencing.', state: 'Ready', locked: false, progress: 0 },
+  { id: 4, title: 'Keywords', icon: 'ph:sparkle-fill', description: 'A guided gauntlet for stealth, guard, rush, and clan-specific text.', state: 'Locked', locked: true, progress: 0 },
 ];
 
 function DifficultyChip({ difficulty }: { difficulty: Difficulty }) {
@@ -171,7 +172,7 @@ export default function SinglePlayerPage() {
         )}
         {selectedNode.deckName && (
           <span className="mt-0.5 inline-flex w-fit max-w-full items-center gap-1 truncate text-xs font-bold text-[var(--color-gold)]">
-            🎴 {selectedNode.deckName}
+            <Icon icon="ph:cards-duotone" size={14} /> {selectedNode.deckName}
           </span>
         )}
       </Region>
@@ -222,7 +223,7 @@ export default function SinglePlayerPage() {
           className="flex h-full w-full items-center justify-center px-4 text-sm font-black tracking-wide text-black disabled:cursor-not-allowed disabled:opacity-50"
         >
           <span className="truncate">
-            {selectedNode.unlocked ? `⚔ Challenge ${selectedNode.opponentName ?? 'the clan'}` : '🔒 Locked'}
+            {selectedNode.unlocked ? (<> <Icon icon="game-icons:crossed-swords" size={16} /> Challenge {selectedNode.opponentName ?? 'the clan'}</>) : (<> <Icon icon="ph:lock-duotone" size={16} /> Locked</>)}
           </span>
         </button>
       </Region>
@@ -275,7 +276,7 @@ export default function SinglePlayerPage() {
             >
               <div className="mb-5 flex items-center justify-between">
                 <h2 className="text-2xl font-black">{overlay === 'practice' ? 'Practice Dojo' : 'Learning Track'}</h2>
-                <button type="button" onClick={() => setOverlay(null)} className="btn">Close ✕</button>
+                <button type="button" onClick={() => setOverlay(null)} className="btn">Close <Icon icon="ph:x-bold" size={13} /></button>
               </div>
 
               {overlay === 'practice' && (
@@ -299,7 +300,7 @@ export default function SinglePlayerPage() {
                   {TUTORIALS.map((tutorial) => (
                     <article key={tutorial.id} className={cx('panel panel-hover p-5', tutorial.locked && 'opacity-55')}>
                       <div className="flex items-start gap-4">
-                        <div className="grid h-14 w-14 place-items-center rounded-2xl border border-[var(--color-line)] bg-[var(--color-panel-2)] text-3xl">{tutorial.locked ? '🔒' : tutorial.icon}</div>
+                        <div className="grid h-14 w-14 place-items-center rounded-2xl border border-[var(--color-line)] bg-[var(--color-panel-2)] text-3xl">{tutorial.locked ? <Icon icon="ph:lock-duotone" size={32} /> : <Icon icon={tutorial.icon} size={32} />}</div>
                         <div className="min-w-0 flex-1">
                           <div className="flex flex-wrap items-center gap-2">
                             <h3 className="text-lg font-black">{tutorial.title}</h3>
