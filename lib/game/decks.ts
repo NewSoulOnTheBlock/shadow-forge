@@ -6,36 +6,67 @@ export interface DeckPreset {
   name: string;
   prisms: Prism[];
   cards: string[];
+  heroId?: string;
 }
 
 export const STARTER_DECKS: DeckPreset[] = [
   {
-    name: 'Shadow Blade Clan',
+    name: 'Stormwind Flight',
+    heroId: 'skyweaver',
+    prisms: ['agility', 'wisdom'],
+    cards: [
+      'agi_scout', 'agi_genin', 'agi_kunoichi', 'agi_falcon', 'agi_falconer', 'agi_windblade',
+      'agi_swiftstrike', 'agi_tempest', 'agi_master', 'agi_dash', 'agi_flurry',
+      'wis_acolyte', 'wis_diviner', 'wis_oracle', 'wis_stormcaller', 'wis_insight', 'wis_scry', 'wis_squall',
+    ],
+  },
+  {
+    name: 'Gatebreaker Horde',
+    heroId: 'oni_warlord',
     prisms: ['strength', 'agility'],
     cards: [
-      'str_recruit', 'str_berserker', 'str_wolf', 'str_warlord', 'str_champion', 'str_ogre', 'str_smash', 'str_rage',
-      'agi_scout', 'agi_rogue', 'agi_duelist', 'agi_falcon', 'agi_assassin', 'agi_windblade', 'agi_dash', 'agi_ambush',
+      'str_recruit', 'str_initiate', 'str_berserker', 'str_brawler', 'str_warhound', 'str_oniblade',
+      'str_ronin', 'str_breaker', 'str_warlord', 'str_ogre', 'str_champion',
+      'str_rage', 'str_smash', 'str_cleave', 'str_warcry', 'str_onislam', 'agi_scout', 'agi_rogue',
     ],
   },
   {
-    name: 'Scroll & Trap Clan',
+    name: 'Eternal Archive',
+    heroId: 'sage',
     prisms: ['wisdom', 'intellect'],
     cards: [
-      'wis_scholar', 'wis_sage', 'wis_oracle', 'wis_mirror', 'wis_archmage', 'wis_bolt', 'wis_insight', 'wis_meteor',
-      'int_turret', 'int_tinkerer', 'int_saboteur', 'int_construct', 'int_summoner', 'int_disrupt', 'int_overload', 'int_hex',
+      'wis_scholar', 'wis_acolyte', 'wis_familiar', 'wis_sage', 'wis_oracle', 'wis_mirror',
+      'wis_archmage', 'wis_elder', 'wis_celestial', 'wis_insight', 'wis_scry', 'wis_meteor', 'wis_nova',
+      'int_drone', 'int_turret', 'int_construct', 'int_summoner', 'int_hex',
     ],
   },
   {
-    name: 'Shrine Warrior Clan',
+    name: 'Silent Ambush',
+    heroId: 'shadow_ninja',
+    prisms: ['agility', 'intellect'],
+    cards: [
+      'agi_genin', 'agi_scout', 'agi_rogue', 'agi_kunoichi', 'agi_assassin', 'agi_shadowstep',
+      'agi_venomdart', 'agi_nightblade', 'agi_phantom', 'agi_reaper', 'agi_smoke', 'agi_ambush',
+      'agi_backstab', 'agi_decapitate', 'int_saboteur', 'int_spider', 'int_snare', 'int_hex',
+    ],
+  },
+  {
+    name: 'Celestial Flame',
+    heroId: 'dragon_monk',
     prisms: ['heart', 'strength'],
     cards: [
-      'hrt_medic', 'hrt_cleric', 'hrt_guardian', 'hrt_lifebloom', 'hrt_treant', 'hrt_phoenix', 'hrt_angel', 'hrt_blessing',
-      'str_recruit', 'str_berserker', 'str_warlord', 'str_champion', 'str_ogre', 'str_titan', 'str_smash', 'str_warcry',
+      'hrt_novice', 'hrt_medic', 'hrt_cleric', 'hrt_guardian', 'hrt_lifebloom', 'hrt_treant',
+      'hrt_phoenix', 'hrt_kirin', 'hrt_angel', 'hrt_avatar', 'hrt_mend', 'hrt_blessing',
+      'hrt_renewal', 'hrt_revive', 'str_recruit', 'str_warlord', 'str_champion', 'str_titan',
     ],
   },
 ];
 
 export const DEFAULT_DECK = STARTER_DECKS[0];
+
+export const STARTER_DECK_BY_HERO: Record<string, DeckPreset> = Object.fromEntries(
+  STARTER_DECKS.filter((d) => d.heroId).map((d) => [d.heroId as string, d]),
+);
 
 // Returns an error string, or null if the deck is legal.
 export function validateDeck(cards: string[], prisms: Prism[]): string | null {
