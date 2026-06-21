@@ -23,7 +23,7 @@ const TOKENS: CardDef[] = [
 // === ONI CLAN — Strength: brute force, momentum, pierce, wither, buffs =======
 const STRENGTH: CardDef[] = [
   { id: 'str_recruit', name: 'Foot Ninja', type: 'unit', prism: 'strength', cost: 1, attack: 2, health: 1, text: '', art: '🗡️' },
-  { id: 'str_initiate', name: 'Dojo Initiate', type: 'unit', prism: 'strength', cost: 1, attack: 1, health: 2, text: '', art: '🥋' },
+  { id: 'str_initiate', name: 'Dojo Initiate', type: 'unit', prism: 'strength', cost: 1, attack: 1, health: 2, keywords: ['guard'], text: 'Guard', art: '🥋' },
   { id: 'str_warhound', name: 'War Hound', type: 'unit', prism: 'strength', cost: 2, attack: 2, health: 1, keywords: ['haste'], text: 'Haste', art: '🐕' },
   { id: 'str_berserker', name: 'Blade Fury', type: 'unit', prism: 'strength', cost: 2, attack: 3, health: 2, text: '', art: '🪓' },
   { id: 'str_brawler', name: 'Pit Brawler', type: 'unit', prism: 'strength', cost: 2, attack: 2, health: 2, keywords: ['momentum'], rarity: 'rare', text: 'Momentum', art: '🥊' },
@@ -34,10 +34,10 @@ const STRENGTH: CardDef[] = [
   { id: 'str_warlord', name: 'Clan Warlord', type: 'unit', prism: 'strength', cost: 4, attack: 4, health: 4, rarity: 'rare', text: 'Battlecry: give your other units +1/+0.', art: '🎌', onPlay: [{ kind: 'buff', target: 'all-ally-units', atk: 1, hp: 0 }] },
   { id: 'str_sentinel', name: 'Stone Sentinel', type: 'unit', prism: 'strength', cost: 4, attack: 2, health: 6, keywords: ['guard'], text: 'Guard', art: '🗿' },
   { id: 'str_marauder', name: 'Mountain Marauder', type: 'unit', prism: 'strength', cost: 5, attack: 5, health: 4, keywords: ['wither'], rarity: 'rare', text: 'Wither', art: '⛏️' },
-  { id: 'str_ogre', name: 'Oni Brute', type: 'unit', prism: 'strength', cost: 5, attack: 6, health: 5, text: '', art: '👹' },
+  { id: 'str_ogre', name: 'Oni Brute', type: 'unit', prism: 'strength', cost: 5, attack: 6, health: 5, keywords: ['guard'], text: 'Guard', art: '👹' },
   { id: 'str_executioner', name: 'Oni Executioner', type: 'unit', prism: 'strength', cost: 5, attack: 4, health: 4, rarity: 'epic', text: 'Battlecry: deal 3 damage to an enemy unit.', art: '🪦', requiresTarget: 'enemy-unit', onPlay: [{ kind: 'damage', target: 'chosen', amount: 3 }] },
   { id: 'str_champion', name: 'Samurai Champion', type: 'unit', prism: 'strength', cost: 6, attack: 5, health: 5, keywords: ['guard'], rarity: 'rare', text: 'Guard', art: '🛡️' },
-  { id: 'str_juggernaut', name: 'Iron Juggernaut', type: 'unit', prism: 'strength', cost: 6, attack: 6, health: 6, text: '', art: '🐲' },
+  { id: 'str_juggernaut', name: 'Iron Juggernaut', type: 'unit', prism: 'strength', cost: 6, attack: 6, health: 6, keywords: ['guard'], text: 'Guard', art: '🐲' },
   { id: 'str_avatar', name: 'Avatar of War', type: 'unit', prism: 'strength', cost: 6, attack: 5, health: 5, keywords: ['flurry'], rarity: 'legendary', text: 'Flurry', art: '🔱' },
   { id: 'str_titan', name: 'Stone Oni', type: 'unit', prism: 'strength', cost: 7, attack: 8, health: 8, keywords: ['pierce'], rarity: 'legendary', text: 'Pierce', art: '🏔️' },
   { id: 'str_warbringer', name: 'Warbringer', type: 'unit', prism: 'strength', cost: 7, attack: 7, health: 6, keywords: ['momentum'], rarity: 'rare', text: 'Momentum. Battlecry: give your other units +1/+1.', art: '🎺', onPlay: [{ kind: 'buff', target: 'all-ally-units', atk: 1, hp: 1 }] },
@@ -57,8 +57,8 @@ const STRENGTH: CardDef[] = [
 // === SAGE CLAN — Wisdom: card draw, spell damage, area control =============
 const WISDOM: CardDef[] = [
   { id: 'wis_scholar', name: 'Scroll Apprentice', type: 'unit', prism: 'wisdom', cost: 1, attack: 1, health: 2, text: 'Battlecry: draw a card.', art: '📜', onPlay: [{ kind: 'draw', target: 'none', amount: 1 }] },
-  { id: 'wis_acolyte', name: 'Ink Acolyte', type: 'unit', prism: 'wisdom', cost: 1, attack: 2, health: 1, text: '', art: '🖌️' },
-  { id: 'wis_sage', name: 'Owl Sensei', type: 'unit', prism: 'wisdom', cost: 2, attack: 2, health: 2, text: '', art: '🦉' },
+  { id: 'wis_acolyte', name: 'Ink Acolyte', type: 'unit', prism: 'wisdom', cost: 1, attack: 2, health: 1, keywords: ['guard'], text: 'Guard', art: '🖌️' },
+  { id: 'wis_sage', name: 'Owl Sensei', type: 'unit', prism: 'wisdom', cost: 2, attack: 2, health: 2, keywords: ['guard'], text: 'Guard', art: '🦉' },
   { id: 'wis_diviner', name: 'Star Diviner', type: 'unit', prism: 'wisdom', cost: 2, attack: 1, health: 3, rarity: 'rare', text: 'Battlecry: draw a card.', art: '🌟', onPlay: [{ kind: 'draw', target: 'none', amount: 1 }] },
   { id: 'wis_mystic', name: 'Storm Mystic', type: 'unit', prism: 'wisdom', cost: 3, attack: 3, health: 2, text: 'Battlecry: deal 1 damage to any target.', art: '🌩️', requiresTarget: 'enemy-any', onPlay: [{ kind: 'damage', target: 'chosen', amount: 1 }] },
   { id: 'wis_oracle', name: 'Fortune Seer', type: 'unit', prism: 'wisdom', cost: 3, attack: 2, health: 3, text: 'Battlecry: draw a card.', art: '🔮', onPlay: [{ kind: 'draw', target: 'none', amount: 1 }] },
@@ -158,7 +158,7 @@ const HEART: CardDef[] = [
 
 // === TRAPMASTER CLAN — Intellect: removal, constructs/summons, debuffs ======
 const INTELLECT: CardDef[] = [
-  { id: 'int_drone', name: 'Scout Drone', type: 'unit', prism: 'intellect', cost: 1, attack: 1, health: 2, text: '', art: '🛸' },
+  { id: 'int_drone', name: 'Scout Drone', type: 'unit', prism: 'intellect', cost: 1, attack: 1, health: 2, keywords: ['guard'], text: 'Guard', art: '🛸' },
   { id: 'int_mechhound', name: 'Mech Hound', type: 'unit', prism: 'intellect', cost: 2, attack: 3, health: 1, text: '', art: '🐕‍🦺' },
   { id: 'int_turret', name: 'Spike Trap', type: 'unit', prism: 'intellect', cost: 2, attack: 0, health: 4, keywords: ['guard'], text: 'Guard', art: '🪤' },
   { id: 'int_engineer', name: 'Trap Engineer', type: 'unit', prism: 'intellect', cost: 2, attack: 2, health: 2, rarity: 'rare', text: 'Battlecry: deal 1 damage to all enemy units.', art: '🛠️', onPlay: [{ kind: 'damage', target: 'all-enemy-units', amount: 1 }] },
@@ -168,14 +168,14 @@ const INTELLECT: CardDef[] = [
   { id: 'int_glider', name: 'Kite Glider', type: 'unit', prism: 'intellect', cost: 3, attack: 2, health: 3, keywords: ['flight'], text: 'Flight', art: '🪁' },
   { id: 'int_repairbot', name: 'Repair Bot', type: 'unit', prism: 'intellect', cost: 3, attack: 2, health: 3, rarity: 'rare', text: 'Battlecry: give your units +0/+2.', art: '🤲', onPlay: [{ kind: 'buff', target: 'all-ally-units', atk: 0, hp: 2 }] },
   { id: 'int_golemancer', name: 'Golem Crafter', type: 'unit', prism: 'intellect', cost: 4, attack: 2, health: 3, rarity: 'rare', text: 'Battlecry: summon a 2/2 Clay Sentinel.', art: '🪛', onPlay: [{ kind: 'summon', target: 'none', token: 'tok_golem', count: 1 }] },
-  { id: 'int_construct', name: 'Iron Sentinel', type: 'unit', prism: 'intellect', cost: 4, attack: 3, health: 5, text: '', art: '🤖' },
+  { id: 'int_construct', name: 'Iron Sentinel', type: 'unit', prism: 'intellect', cost: 4, attack: 3, health: 5, keywords: ['guard'], text: 'Guard', art: '🤖' },
   { id: 'int_warden', name: 'Iron Warden', type: 'unit', prism: 'intellect', cost: 4, attack: 2, health: 6, keywords: ['guard'], text: 'Guard', art: '🚧' },
   { id: 'int_summoner', name: 'Puppet Master', type: 'unit', prism: 'intellect', cost: 5, attack: 3, health: 3, rarity: 'rare', text: 'Battlecry: summon two 2/2 Clay Sentinels.', art: '🎎', onPlay: [{ kind: 'summon', target: 'none', token: 'tok_golem', count: 2 }] },
   { id: 'int_disruptor', name: 'Mind Disruptor', type: 'unit', prism: 'intellect', cost: 5, attack: 4, health: 4, rarity: 'rare', text: 'Battlecry: give an enemy unit -3 Attack.', art: '🧠', requiresTarget: 'enemy-unit', onPlay: [{ kind: 'buff', target: 'chosen', atk: -3, hp: 0 }] },
   { id: 'int_siege', name: 'Siege Engine', type: 'unit', prism: 'intellect', cost: 5, attack: 5, health: 5, rarity: 'epic', text: 'Battlecry: deal 3 damage to any target.', art: '🏹', requiresTarget: 'enemy-any', onPlay: [{ kind: 'damage', target: 'chosen', amount: 3 }] },
   { id: 'int_sentinel2', name: 'Guardian Construct', type: 'unit', prism: 'intellect', cost: 6, attack: 5, health: 7, keywords: ['guard'], rarity: 'epic', text: 'Guard', art: '🗼' },
   { id: 'int_assembler', name: 'Mech Assembler', type: 'unit', prism: 'intellect', cost: 6, attack: 4, health: 4, rarity: 'epic', text: 'Battlecry: summon two 2/2 Clay Sentinels and give your units +1/+0.', art: '🏭', onPlay: [{ kind: 'summon', target: 'none', token: 'tok_golem', count: 2 }, { kind: 'buff', target: 'all-ally-units', atk: 1, hp: 0 }] },
-  { id: 'int_colossus', name: 'War Automaton', type: 'unit', prism: 'intellect', cost: 7, attack: 7, health: 7, rarity: 'legendary', text: '', art: '⚙️' },
+  { id: 'int_colossus', name: 'War Automaton', type: 'unit', prism: 'intellect', cost: 7, attack: 7, health: 7, keywords: ['guard'], rarity: 'legendary', text: 'Guard', art: '⚙️' },
   { id: 'int_overlord', name: 'Clockwork Overlord', type: 'unit', prism: 'intellect', cost: 8, attack: 7, health: 8, rarity: 'legendary', text: 'Battlecry: summon two 2/2 Clay Sentinels.', art: '👑', onPlay: [{ kind: 'summon', target: 'none', token: 'tok_golem', count: 2 }] },
   { id: 'int_disrupt', name: 'Caltrops', type: 'spell', prism: 'intellect', cost: 1, text: 'Give an enemy unit -2 Attack.', art: '🪡', requiresTarget: 'enemy-unit', onPlay: [{ kind: 'buff', target: 'chosen', atk: -2, hp: 0 }] },
   { id: 'int_trapline', name: 'Tripwire', type: 'spell', prism: 'intellect', cost: 1, text: 'Deal 2 damage to an enemy unit.', art: '➰', requiresTarget: 'enemy-unit', onPlay: [{ kind: 'damage', target: 'chosen', amount: 2 }] },
